@@ -13,9 +13,10 @@ const Redirect: NextPage = () => {
     const authenticate = async (query: ParsedUrlQuery) => {
       // Save auth token to local storage
       const stravaAuthToken = query.code as string
-      localStorage.setItem('StravaAuthToken', stravaAuthToken)
+      // localStorage.setItem('StravaAuthToken', stravaAuthToken)
       // All neccessary tokens from the strava res
       const tokens = await authGetter(stravaAuthToken)
+      // localStorage.setItem('StravaAccessToken', tokens.access_token)
       // Save tokesn to store for easier fetch on tabs
       setAccessToken(tokens.access_token)
       setRefreshToken(tokens.refresh_token)

@@ -1,20 +1,37 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
+import { useUserStore } from '../stores/userStore'
 import styles from '../styles/Home.module.scss'
+import { authGetter, handleLogin } from '../utils/strava'
 
 
 const Home: NextPage = () => {
+  const router = useRouter()
+  const { setAthlete, setAccessToken, setRefreshToken } = useUserStore()
+  useEffect(() => {
+    // Meant to work as an 'automatic' login if you have the auth token
+    // Not working as of right now for some reason.
+    const stravaAuthToken = localStorage.getItem('StravaAuthToken')
+    const authCheck = async (token: string) => {
+      const tokens = await authGetter(token)
+      // Save tokesn to store for easier fetch on tabs
+      setAccessToken(tokens.access_token)
+      setRefreshToken(tokens.refresh_token)
+      setAthlete(tokens.athlete)
+      router.push('/user')
+    }
+    if(stravaAuthToken) {
+      // console.log(stravaAuthToken)
+      // authCheck(stravaAuthToken)
+    }
+  }, [router, setAccessToken, setAthlete, setRefreshToken])
 
-  const redirectUrl = 'http://localhost:3000/redirect'
-  const scope = 'read,activity:read_all'
 
-  const handleLogin = () => {
-    // Workaround to get rid of type issue with window.location not being allowed a string https://github.com/microsoft/TypeScript/issues/48949
-    const win: Window = window
-    win.location = `http://www.strava.com/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_STRAVA_CLIENT_ID
-}&response_type=code&redirect_uri=${redirectUrl}/exchange_token&approval_prompt=force&scope=${scope}`
-  }
+
   return (
     <div className={styles.container}>
       <Head>
@@ -23,6 +40,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <button onClick={handleLogin}>Connect to strava</button>
+      <Link href='/user'>User</Link>
     </div>
   )
 }
