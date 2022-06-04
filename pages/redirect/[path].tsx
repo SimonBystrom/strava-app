@@ -1,0 +1,37 @@
+import { NextPage } from "next";
+import { useRouter } from "next/router";
+import { ParsedUrlQuery } from "querystring";
+import { useEffect } from "react";
+import { useUserStore } from "../../stores/userStore";
+import { getUserData, authGetter } from "../../utils/strava";
+
+
+const Redirect: NextPage = () => {
+  const router = useRouter()
+  const {setAthlete, setAccessToken, setRefreshToken} = useUserStore()
+  useEffect(() => {
+    const authenticate = async (query: ParsedUrlQuery) => {
+      // Save auth token to local storage
+      const stravaAuthToken = query.code as string
+      localStorage.setItem('StravaAuthToken', stravaAuthToken)
+      // All neccessary tokens from the strava res
+      const tokens = await authGetter(stravaAuthToken)
+      // Save tokesn to store for easier fetch on tabs
+      setAccessToken(tokens.access_token)
+      setRefreshToken(tokens.refresh_token)
+      setAthlete(tokens.athlete)
+    }
+    if(router.query.code) {
+      authenticate(router.query)
+      router.push('/user')
+    }
+  }, [router, setAccessToken, setAthlete, setRefreshToken])
+
+  return(
+    <div>
+      Loading ...
+    </div>
+  )
+}
+
+export default Redirect
