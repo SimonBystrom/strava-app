@@ -46,30 +46,10 @@ export const getUserActivities = async (accessToken: string, setActivities: (act
       `https://www.strava.com/api/v3/athlete/activities?per_page=30`,
       { headers: { Authorization: `Bearer ${accessToken}`}}
     ).then( response => {
-
-      // const formattedActivities = response.map(activity => {
-
-      // })
+      // TODO: Needs to map over each response, set it to Activity (type) and remove
+      // unused fields and change other fields..
       return  setActivities(response.data)
     })
-  //   const response = await fetch(
-  //     `https://www.strava.com/api/v3/athlete/activities?per_page=30`,
-  //     {
-  //       method: 'GET',
-  //       headers: {
-  //         'authorization': `Bearer ${accessToken}`
-  //       }
-  //     }
-  //   )
-  // const {data, errors} = await response.json()
-  // if(response.ok) {
-  //   const activities = data
-  //   if(activities) {
-  //     return activities
-  //   } else {
-  //     return Promise.reject(new Error('Error fetching activities... No activities found'))
-  //   }
-  // }
   } catch (error) {
     console.log(error)
   }
