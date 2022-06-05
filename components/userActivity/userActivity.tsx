@@ -7,13 +7,15 @@ interface UserActivityProps {
 
 const UserActivity: FC<UserActivityProps> = ({ activities }) => {
   return (
-    <div>
+    <>
+
+      <h2>ACTIVITIES</h2>
       {activities.map(item => {
         return (
-          <span key={item.distance}>{item.distance}</span>
+          <div key={item.distance}>{item.distance}</div>
         )
       })}
-    </div>
+    </>
   )
 }
 

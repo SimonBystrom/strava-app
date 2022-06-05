@@ -30,12 +30,8 @@ const Layout: FC<LayoutProps> = ({children, activePage}) => {
               [classes.Active]: page.label === activePage
             })
             return (
-              <Link
-                key={idx}
-                href={page.href}
-                className={linkStyles}
-              >
-                {page.label}
+              <Link key={idx} href={page.href}>
+                <a className={linkStyles}>{page.label}</a>
               </Link>
             )
           })
