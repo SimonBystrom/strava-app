@@ -2,6 +2,8 @@ import { NextPage } from "next";
 import Link from "next/link";
 import Router, { useRouter } from "next/router";
 import { useEffect } from "react";
+import Layout from "../components/layout/layout";
+import UserMain from "../components/userMain/userMain";
 import { Activity, useUserActivitiesStore } from "../stores/userActivitiesStore";
 import { useUserStore } from "../stores/userStore";
 import { convertToHourMinSec } from "../utils/secondsConverter";
@@ -16,7 +18,7 @@ const User: NextPage = () => {
     // const stravaAccessToken = localStorage.getItem('StravaAccessToken')
     const getUserStats = async () => {
         // const userStats = await getUserData(athlete.id, accessToken)
-        const userActivities = await getUserActivities(accessToken, setActivities)
+        // await getUserActivities(accessToken, setActivities)
       // convertToHourMinSec(userActivities?.data[0].moving_time)
     }
     if (athlete.id) {
@@ -25,7 +27,7 @@ const User: NextPage = () => {
   }, [athlete.id, accessToken, setActivities])
 
 
-  console.log('store activity', activities)
+
   if (!athlete.id) {
     return (
       <div>
@@ -35,16 +37,9 @@ const User: NextPage = () => {
     )
   }
   return (
-    <div>
-      Welcome {athlete.lastname}
-      {activities.map(item => {
-        return (
-          <span key={item.distance}>{item.distance}</span>
-
-        )
-      })}
-      <Link href='/'>To home</Link>
-    </div>
+    <Layout activePage='Home'>
+      <UserMain athlete={athlete}/>
+    </Layout>
   )
 }
 

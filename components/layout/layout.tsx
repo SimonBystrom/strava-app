@@ -1,0 +1,48 @@
+
+import Head from 'next/head'
+import Link from 'next/link'
+import { FC } from 'react'
+import classes from './layout.module.scss'
+import classnames from 'classnames'
+import { allPages, Pages } from '../../utils/pages'
+
+interface LayoutProps {
+  children: JSX.Element
+  activePage: Pages
+}
+
+const Layout: FC<LayoutProps> = ({children, activePage}) => {
+  return(
+    <div className={classes.LayoutContainer}>
+      <Head>
+
+      </Head>
+      <div className={classes.Header}>
+        Header
+      </div>
+      <main className={classes.Main}>
+        {children}
+      </main>
+      <div className={classes.Sidebar}>
+        {
+          allPages.map((page, idx) => {
+            const linkStyles = classnames(classes.Link, {
+              [classes.Active]: page.label === activePage
+            })
+            return (
+              <Link
+                key={idx}
+                href={page.href}
+                className={linkStyles}
+              >
+                {page.label}
+              </Link>
+            )
+          })
+        }
+      </div>
+    </div>
+  )
+}
+
+export default Layout

@@ -1,20 +1,20 @@
 import create from 'zustand'
 
-type ActivityTime = {
+export type ActivityTime = {
   hours: number,
   minutes: number,
   seconds: number,
 }
 
 export type Activity = {
+  type: 'Run' | 'Ride',
+  name: string,
   averageSpeed: number,
   distance: number,
-  elapsed_time: ActivityTime,
-  moving_time: ActivityTime,
-  max_speed: number,
-  name: string,
-  start_date_local: string,
-  type: 'Run' | 'Ride',
+  maxSpeed: number,
+  startDateLocal: string,
+  elapsedTime: ActivityTime,
+  movingTime: ActivityTime,
 }
 
 type UserActivitiesStoreProps = {

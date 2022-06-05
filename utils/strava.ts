@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from "axios"
 import { Activity, useUserActivitiesStore } from "../stores/userActivitiesStore"
 import { Athlete } from "../stores/userStore"
+import { convertToHourMinSec } from "./secondsConverter"
 
 export const handleLogin = () => {
   const redirectUrl = 'http://localhost:3000/redirect'
@@ -40,17 +41,41 @@ type GetUserResponse = {
   data: Activity[]
 }
 
+const parseActivity = (responseItem: any): Activity | null => {
+  // do your parsing here and rename the fields as you like
+  // if a field fails to parse you can do a console.error to make it clear in the
+  // console and return null
+  const parsedActivity = {
+    type: responseItem.type,
+    name: responseItem.name,
+    averageSpeed: responseItem.average_speed,
+    distance: responseItem.distance,
+    maxSpeed: responseItem.max_speed,
+    startDateLocal: responseItem.start_date_local,
+    elapsedTime: convertToHourMinSec(responseItem.elapsed_time),
+    movingTime: convertToHourMinSec(responseItem.moving_time),
+  }
+  return parsedActivity
+}
+
 export const getUserActivities = async (accessToken: string, setActivities: (activities: Activity[]) => void) => {
+  let response: AxiosResponse
   try {
-    await axios.get<Activity[]>(
+    response = await axios.get(
       `https://www.strava.com/api/v3/athlete/activities?per_page=30`,
       { headers: { Authorization: `Bearer ${accessToken}`}}
-    ).then( response => {
-      // TODO: Needs to map over each response, set it to Activity (type) and remove
-      // unused fields and change other fields..
-      return  setActivities(response.data)
-    })
+    )
   } catch (error) {
     console.log(error)
+    return
   }
+
+  const activities: Activity[] = []
+  for (const item of response.data) {
+    const activity = parseActivity(item)
+    if(activity) {
+      activities.push(activity)
+    }
+  }
+  setActivities(activities)
 }

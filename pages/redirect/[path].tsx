@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
 import { useEffect } from "react";
 import { useUserStore } from "../../stores/userStore";
-import { getUserData, authGetter } from "../../utils/strava";
+import { authGetter } from "../../utils/strava";
 
 
 const Redirect: NextPage = () => {
@@ -11,8 +11,8 @@ const Redirect: NextPage = () => {
   const {setAthlete, setAccessToken, setRefreshToken} = useUserStore()
   useEffect(() => {
     const authenticate = async (query: ParsedUrlQuery) => {
-      // Save auth token to local storage
       const stravaAuthToken = query.code as string
+      // Save auth token to local storage
       // localStorage.setItem('StravaAuthToken', stravaAuthToken)
       // All neccessary tokens from the strava res
       const tokens = await authGetter(stravaAuthToken)

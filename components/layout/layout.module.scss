@@ -1,0 +1,28 @@
+.LayoutContainer {
+  display: grid;
+  grid-template-areas:
+    'head head'
+    'sidebar main';
+  grid-template-columns: 180px 1fr;
+  grid-template-rows: 50px 1fr;
+  height: 100%;
+  min-height: 100vh;
+  width: 100vw;
+}
+
+.Header {
+  grid-area: head;
+  background-color: red;
+}
+
+.Sidebar {
+  grid-area: sidebar;
+  background-color: green;
+  display: flex;
+  flex-direction: column;
+}
+
+.Main {
+  grid-area: main;
+  background-color: blue;
+}
