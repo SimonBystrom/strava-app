@@ -21,7 +21,7 @@ const ActivityPage: NextPage = () => {
       setRefreshToken(tokens.refresh_token)
       return tokens
     }
-    const getUserStats = async () => {
+    const getUserData = async () => {
       if (athlete.id) {
         return await getUserActivities(accessToken, setActivities)
       }
@@ -32,7 +32,7 @@ const ActivityPage: NextPage = () => {
         return await getUserActivities(newTokens.access_token, setActivities)
       }
     }
-    getUserStats()
+    getUserData()
   }, [athlete.id, accessToken, setActivities, setAccessToken, setRefreshToken])
   console.log('store activity', activities)
 

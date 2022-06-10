@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from "axios"
 import { Activity, useUserActivitiesStore } from "../stores/userActivitiesStore"
+import { BaseStats } from "../stores/userStatsStore"
 import { Athlete } from "../stores/userStore"
 import { convertToHourMinSec } from "./secondsConverter"
 
@@ -43,16 +44,27 @@ export const reAuthGetter = async (refreshToken: string) => {
   }
 }
 
-export const getUserData = async (userID: Athlete['id'], accessToken: string) => {
+export const getUserStats = async (userID: Athlete['id'], accessToken: string, setRunningStats: (stats: BaseStats) => void) => {
+  let response: AxiosResponse
   try {
-    const response = await axios.get(
+    response = await axios.get(
       `https://www.strava.com/api/v3/athletes/${userID}/stats`,
       { headers: { Authorization: `Bearer ${accessToken}` } }
     )
-    return response
   } catch (error) {
     console.log(error)
+    return
   }
+
+  const parsedResponse: BaseStats = {
+    count: response.data.all_run_totals.count,
+    distance: response.data.all_run_totals.distance,
+    elapsedTime: convertToHourMinSec(response.data.all_run_totals.elapsed_time),
+    elevationGain: response.data.all_run_totals.elevation_gain,
+    movingTime: convertToHourMinSec(response.data.all_run_totals.moving_time)
+  }
+
+  setRunningStats(parsedResponse)
 }
 
 export const getAthlete = async (accessToken: string, setAthlete: (athlete: Athlete) => void) => {

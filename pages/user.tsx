@@ -5,13 +5,14 @@ import { useEffect } from "react";
 import Layout from "../components/layout/layout";
 import UserMain from "../components/userMain/userMain";
 import { Activity, useUserActivitiesStore } from "../stores/userActivitiesStore";
+import { useUserStatsStore } from "../stores/userStatsStore";
 import { useUserStore } from "../stores/userStore";
 import { convertToHourMinSec } from "../utils/secondsConverter";
-import { authGetter, getAthlete, getUserActivities, getUserData, handleLogin, reAuthGetter } from "../utils/strava";
+import { authGetter, getAthlete, getUserActivities, getUserStats, handleLogin, reAuthGetter } from "../utils/strava";
 
 const User: NextPage = () => {
   const { athlete, accessToken, refreshToken, setAccessToken, setRefreshToken, setAthlete } = useUserStore()
-  const { setActivities, activities } = useUserActivitiesStore()
+  const {runningStats, setRunningStats} = useUserStatsStore()
   const router = useRouter()
 
   useEffect(() => {
@@ -22,9 +23,9 @@ const User: NextPage = () => {
       setRefreshToken(tokens.refresh_token)
       return tokens
     }
-    const getUserStats = async () => {
+    const getUserData = async () => {
       if (athlete.id) {
-        return await getUserData(athlete.id, accessToken)
+        return await getUserStats(athlete.id, accessToken, setRunningStats)
       }
       if (!athlete.id) {
         const newTokens = await reAuthenticate()
@@ -38,8 +39,8 @@ const User: NextPage = () => {
         // console.log('new',newTokens)
       }
     }
-    getUserStats()
-  }, [athlete.id, accessToken, setActivities, setAccessToken, setRefreshToken, setAthlete])
+    getUserData()
+  }, [athlete.id, accessToken, setAccessToken, setRefreshToken, setAthlete, setRunningStats])
 
 
   if (!athlete.id) {
@@ -54,7 +55,7 @@ const User: NextPage = () => {
   }
   return (
     <Layout activePage='Home'>
-      <UserMain athlete={athlete}/>
+      <UserMain athlete={athlete} runningsStats={runningStats}/>
     </Layout>
   )
 }
