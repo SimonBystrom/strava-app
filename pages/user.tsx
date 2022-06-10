@@ -29,14 +29,9 @@ const User: NextPage = () => {
       }
       if (!athlete.id) {
         const newTokens = await reAuthenticate()
-        await  getAthlete(newTokens.access_token, setAthlete)
-        // Need to call with the new refreshToken. Can't be taken from the store yet, coz it's not been
+        // Need to call with the new access token. Can't be taken from the store yet, coz it's not been
         // completely set when we try to call this function.
-        // const currentAthleteId = localStorage.getItem('StravaAthleteId')
-        // if(currentAthleteId) {
-        //   return await getUserData(parseInt(currentAthleteId, 10), newTokens.access_token)
-        // }
-        // console.log('new',newTokens)
+        await  getAthlete(newTokens.access_token, setAthlete)
       }
     }
     getUserData()
