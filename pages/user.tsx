@@ -15,8 +15,6 @@ const User: NextPage = () => {
         {userStats && <UserMain athlete={athlete} runningsStats={userStats} />}
         {isLoading && <p>Loading ...</p>}
       </>
-
-
     </Layout>
   )
 }
