@@ -14,7 +14,7 @@ export type Athlete = {
   weight: number,
 }
 
-const emptyAthlete: Athlete = {
+export const emptyAthlete: Athlete = {
   id: 0,
   firstname: '',
   lastname: '',
