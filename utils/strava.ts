@@ -1,9 +1,14 @@
 import axios, { AxiosResponse } from "axios"
+import { useEffect } from "react"
+import { useQuery } from "react-query"
 import { Activity, useUserActivitiesStore } from "../stores/userActivitiesStore"
 import { BaseStats } from "../stores/userStatsStore"
-import { Athlete } from "../stores/userStore"
+import { Athlete, useUserStore } from "../stores/userStore"
 import { convertToHourMinSec } from "./secondsConverter"
 
+/**
+ * Handles the OAuth login redirect to Strava
+ */
 export const handleLogin = () => {
   const redirectUrl = 'http://localhost:3000/redirect'
   const scope = 'read,activity:read_all'
@@ -13,6 +18,9 @@ export const handleLogin = () => {
 }&response_type=code&redirect_uri=${redirectUrl}/exchange_token&approval_prompt=force&scope=${scope}`
 }
 
+/**
+ * Handles First Time Authentication & Expired Refresh Token Authentication
+ */
 export const authGetter = async (authToken: string) => {
   const clientId = process.env.NEXT_PUBLIC_STRAVA_CLIENT_ID
   const clientSecret = process.env.NEXT_PUBLIC_STRAVA_SECRET
@@ -29,22 +37,40 @@ export const authGetter = async (authToken: string) => {
   }
 }
 
+type AuthResponse = {
+  access_token: string,
+  refresh_token: string,
+}
+
+/**
+ * Handles Re Authentication, used by the useReAuth hook
+ */
 export const reAuthGetter = async (refreshToken: string) => {
   const clientId = process.env.NEXT_PUBLIC_STRAVA_CLIENT_ID
   const clientSecret = process.env.NEXT_PUBLIC_STRAVA_SECRET
+
+  let response: AxiosResponse
+
   try {
-    const response = await axios.post(
+    response = await axios.post(
       `https://www.strava.com/oauth/token?client_id=${clientId}&client_secret=${clientSecret}&refresh_token=${refreshToken}&grant_type=refresh_token`
     )
-    localStorage.setItem('StravaAccessToken', response.data.access_token)
-    localStorage.setItem('StravaRefreshToken', response.data.refresh_token)
-    return response.data
   } catch (error) {
     console.log(error)
+    return
   }
+
+  const tokens: AuthResponse = {
+    access_token: response.data.access_token,
+    refresh_token: response.data.refresh_token,
+  }
+  return tokens
 }
 
-export const getUserStats = async (userID: Athlete['id'], accessToken: string, setRunningStats: (stats: BaseStats) => void) => {
+/**
+ * Handles fetching of user stats. Used by the useUserStats hook.
+ */
+export const getUserStats = async (userID: Athlete['id'], accessToken: string) => {
   let response: AxiosResponse
   try {
     response = await axios.get(
@@ -64,9 +90,12 @@ export const getUserStats = async (userID: Athlete['id'], accessToken: string, s
     movingTime: convertToHourMinSec(response.data.all_run_totals.moving_time)
   }
 
-  setRunningStats(parsedResponse)
+  return parsedResponse
 }
 
+/**
+ * Handles fetching Athlete Info. Used by the useReAuth and useAuth hooks
+ */
 export const getAthlete = async (accessToken: string, setAthlete: (athlete: Athlete) => void) => {
   let response: AxiosResponse
   try {
@@ -87,13 +116,15 @@ export const getAthlete = async (accessToken: string, setAthlete: (athlete: Athl
     username: response.data.username,
     weight: response.data.weight,
   }
+
+  // Todo: Change this behavior to be made by the reAuth and Auth hooks.
   setAthlete(parsedResponse)
 }
 
+/**
+ * Parses activities to correct Type
+ */
 const parseActivity = (responseItem: any): Activity | null => {
-  // do your parsing here and rename the fields as you like
-  // if a field fails to parse you can do a console.error to make it clear in the
-  // console and return null
   const parsedActivity = {
     type: responseItem.type,
     name: responseItem.name,
@@ -107,24 +138,39 @@ const parseActivity = (responseItem: any): Activity | null => {
   return parsedActivity
 }
 
-export const getUserActivities = async (accessToken: string, setActivities: (activities: Activity[]) => void) => {
+/**
+ * Handles fetching user Activities. Used by the useUserActivities hook.
+ */
+export const getUserActivities = async (accessToken: string) => {
   let response: AxiosResponse
-  try {
-    response = await axios.get(
-      `https://www.strava.com/api/v3/athlete/activities?per_page=30`,
-      { headers: { Authorization: `Bearer ${accessToken}`}}
-    )
-  } catch (error) {
-    console.log(error)
-    return
-  }
-
+  let page = 1
+  let allResultsFetched = false
   const activities: Activity[] = []
-  for (const item of response.data) {
-    const activity = parseActivity(item)
-    if(activity) {
-      activities.push(activity)
+
+  // Loop over all pages to get all activities.
+  while(!allResultsFetched) {
+    try {
+      response = await axios.get(
+        `https://www.strava.com/api/v3/athlete/activities?per_page=50&page=${page}`,
+        { headers: { Authorization: `Bearer ${accessToken}`}}
+      )
+    } catch (error) {
+      console.log(error)
+      return
+    }
+
+    if(!!response.data.length) {
+      for (const item of response.data) {
+        const activity = parseActivity(item)
+        if (activity) {
+          activities.push(activity)
+        }
+      }
+      page ++
+    } else {
+      allResultsFetched = true
+      break
     }
   }
-  setActivities(activities)
+  return activities
 }
