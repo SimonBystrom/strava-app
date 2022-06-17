@@ -15,7 +15,7 @@ const Redirect: NextPage = () => {
       // All neccessary tokens from the strava res
       const tokens = await authGetter(stravaAuthToken)
 
-      // Save tokesn to store for easier fetch on tabs
+      // Save tokens to store for easier fetch on tabs
       setAccessToken(tokens.access_token)
       setRefreshToken(tokens.refresh_token)
       setAthlete(tokens.athlete)

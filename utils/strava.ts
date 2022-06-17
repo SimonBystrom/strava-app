@@ -94,9 +94,9 @@ export const getUserStats = async (userID: Athlete['id'], accessToken: string) =
 }
 
 /**
- * Handles fetching Athlete Info. Used by the useReAuth and useAuth hooks
+ * Handles fetching Athlete Info. Used by the useReAuth
  */
-export const getAthlete = async (accessToken: string, setAthlete: (athlete: Athlete) => void) => {
+export const getAthlete = async (accessToken: string) => {
   let response: AxiosResponse
   try {
     response = await axios.get(
@@ -117,8 +117,7 @@ export const getAthlete = async (accessToken: string, setAthlete: (athlete: Athl
     weight: response.data.weight,
   }
 
-  // Todo: Change this behavior to be made by the reAuth and Auth hooks.
-  setAthlete(parsedResponse)
+  return parsedResponse
 }
 
 /**
