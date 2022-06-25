@@ -5,6 +5,7 @@ import { FC } from 'react'
 import classes from './layout.module.scss'
 import classnames from 'classnames'
 import { allPages, Pages } from '../../utils/pages'
+import { Container } from '@mantine/core'
 
 interface LayoutProps {
   children: JSX.Element
@@ -20,9 +21,9 @@ const Layout: FC<LayoutProps> = ({children, activePage}) => {
       <div className={classes.Header}>
         Header
       </div>
-      <main className={classes.Main}>
+      <Container className={classes.Main} fluid={true}>
         {children}
-      </main>
+      </Container>
       <div className={classes.Sidebar}>
         {
           allPages.map((page, idx) => {

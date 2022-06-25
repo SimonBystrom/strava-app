@@ -4,7 +4,7 @@ import { useQuery } from "react-query"
 import { Activity, useUserActivitiesStore } from "../stores/userActivitiesStore"
 import { BaseStats } from "../stores/userStatsStore"
 import { Athlete, useUserStore } from "../stores/userStore"
-import { convertToHourMinSec } from "./secondsConverter"
+import { convertToHourMinSec } from "./timeConverter"
 
 /**
  * Handles the OAuth login redirect to Strava
@@ -133,6 +133,7 @@ const parseActivity = (responseItem: any): Activity | null => {
     startDateLocal: responseItem.start_date_local,
     elapsedTime: convertToHourMinSec(responseItem.elapsed_time),
     movingTime: convertToHourMinSec(responseItem.moving_time),
+    unparsedTime: responseItem.elapsed_time,
   }
   return parsedActivity
 }

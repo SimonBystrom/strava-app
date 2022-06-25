@@ -13,7 +13,7 @@ const ActivityPage: NextPage = () => {
       {activities && <UserActivity activities={activities} />}
       {isLoading && <p>Loading ...</p>}
     </>
-
+      {/* <UserActivity /> */}
    </Layout>
   )
 }

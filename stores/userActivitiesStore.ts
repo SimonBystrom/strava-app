@@ -15,6 +15,7 @@ export type Activity = {
   startDateLocal: string,
   elapsedTime: ActivityTime,
   movingTime: ActivityTime,
+  unparsedTime: number,
 }
 
 type UserActivitiesStoreProps = {

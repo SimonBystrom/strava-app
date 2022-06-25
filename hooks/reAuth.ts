@@ -21,7 +21,6 @@ export const useReAuth = () => {
       if (refreshToken) {
         try {
           const tokens = await reAuthGetter(refreshToken)
-          // TODO: Check if
           // If there's no tokens we need a hard authentication (to get new Tokens)
           if (!tokens) {
             console.info('No Tokens found on re-authentication attempt.')

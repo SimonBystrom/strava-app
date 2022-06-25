@@ -15,7 +15,8 @@ export const useStats = () => {
     ['userStats', athlete?.id, accessToken],
     () => getUserStats(athlete?.id, accessToken),
     {
-      enabled: !!athlete?.id && !!accessToken
+      enabled: !!athlete?.id && !!accessToken,
+      staleTime: 30000,
     }
   )
 }

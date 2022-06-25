@@ -17,19 +17,19 @@
   position: fixed;
   top: 0;
   width: 100%;
-  height: 50px;
+  height: var(--header-height);
   z-index: 10;
-  background-color: red;
+  background-color: var(--color-white);
 }
 
 .Sidebar {
   grid-area: sidebar;
   position: fixed;
-  top: 50px;
+  top: var(--header-height);
   left: 0;
-  width: 180px;
-  height: calc(100% - 50px);
-  background-color: green;
+  width: var(--sidebar-width);
+  height: calc(100% - var(--header-height));
+  background-color: var(--color-white);
   display: flex;
   flex-direction: column;
   padding: 12px;
@@ -46,10 +46,10 @@
 .Main {
   grid-area: main;
   position: absolute;
-  top: 50px;
-  left: 180px;
+  top: var(--header-height);
+  left: var(--sidebar-width);
   right: 0;
-  width: calc(100% - 180px);
-  height: calc(100% - 50px);
-  // overflow-x: hidden;
+  width: calc(100% - var(--sidebar-width));
+  min-height: calc(100% - var(--header-height));
+  background-color: var(--color-light-grey);
 }

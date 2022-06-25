@@ -16,6 +16,7 @@ export const useActivities = () => {
     () => getUserActivities(accessToken),
     {
       enabled: !!accessToken,
+      staleTime: 30000,
     }
   )
 }
