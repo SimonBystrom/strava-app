@@ -2,8 +2,6 @@ import { TimePeriod } from "../components/userActivity/userActivity"
 import { Activity, ActivityTime } from "../stores/userActivitiesStore"
 import { convertToHourMinSec } from "../utils/timeConverter"
 
-
-
 export type RunningData = {
   total: number,
   time: ActivityTime,
@@ -95,7 +93,6 @@ const getCustomPeriod = (
   }
   return null
 }
-
 
 
 type RunsByPeriod = {
