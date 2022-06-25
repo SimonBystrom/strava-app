@@ -60,6 +60,11 @@ const getActivitiesByPeriod = (
     }
 }
 
+// I could make the custom period part of the getActivitiesByPeriod function, but it would require me to
+// also make the return type a union of RunningData | null -> and then the useRunsByPeriod return data all
+// has to be optional -> less predictability of the data returns that should always have data.
+// Might have to rethink this logic in the future. (What if a signed in user has no runs? What is the structure
+// of the activities array then?)
 const getCustomPeriod = (
   activities: Activity[],
   customPeriod: [Date | null, Date | null]
