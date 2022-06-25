@@ -13,17 +13,40 @@ enum TimePeriods {
   All = 'all'
 }
 interface MilestonesProps {
-  periodData: RunningData
+  period: TimePeriods
+  activities: Activity[]
 }
 
-const Milestones: FC<MilestonesProps> = ({periodData}) => {
+const Milestones: FC<MilestonesProps> = ({period, activities}) => {
+  const { month, year, all } = useRunsByPeriod(activities)
+  if(period === TimePeriods.Month) {
     return (
       <>
-        <div>2KM: {periodData.twoKM}</div>
-        <div>5KM: {periodData.fiveKM}</div>
-        <div>10KM: {periodData.tenKM}</div>
+        <div>2KM: {month.twoKM}</div>
+        <div>5KM: {month.fiveKM}</div>
+        <div>10KM: {month.tenKM}</div>
       </>
     )
+  }
+  if (period === TimePeriods.Year) {
+    return (
+      <>
+        <div>2KM: {year.twoKM}</div>
+        <div>5KM: {year.fiveKM}</div>
+        <div>10KM: {year.tenKM}</div>
+      </>
+    )
+  }
+  if (period === TimePeriods.All) {
+    return (
+      <>
+        <div>2KM: {all.twoKM}</div>
+        <div>5KM: {all.fiveKM}</div>
+        <div>10KM: {all.tenKM}</div>
+      </>
+    )
+  }
+  return (<></>)
 }
 
 interface UserActivityProps {
@@ -31,9 +54,9 @@ interface UserActivityProps {
 }
 
 const UserActivity: FC<UserActivityProps> = ({ activities }) => {
-  const {month,  year, all} = useRunsByPeriod(activities)
+  const { month, year, all } = useRunsByPeriod(activities)
   const [milestonePeriod, setMilestonePeriod] = useState<string | null>(TimePeriods.All)
-  convertToKm(month.distance)
+
   return (
     <div className={classes.ActivitiesContainer}>
       <div >
@@ -70,9 +93,7 @@ const UserActivity: FC<UserActivityProps> = ({ activities }) => {
           value={milestonePeriod}
           onChange={setMilestonePeriod}
         />
-        {milestonePeriod === TimePeriods.Month && <Milestones periodData={month}/>}
-        {milestonePeriod === TimePeriods.Year && <Milestones periodData={year}/>}
-        {milestonePeriod === TimePeriods.All && <Milestones periodData={all}/>}
+        <Milestones period={milestonePeriod as TimePeriods} activities={activities}/>
       </div>
     </div>
   )
