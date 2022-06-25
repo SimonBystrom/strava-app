@@ -64,6 +64,10 @@ type RunsByPeriod = {
   all: RunningData
 }
 
+/**
+ * Returns the Year, Month, All data for user running activity.
+ * Year / Month / All has data for Total Time / Total Distance / Total Runs
+ */
 export const useRunsByPeriod = (activities: Activity[]): RunsByPeriod => {
   let currentDate = new Date()
   const month = getMonthActivities(activities, currentDate)
