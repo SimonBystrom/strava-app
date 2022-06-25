@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@mantine/core": "^4.2.9",
+    "@mantine/dates": "^4.2.10",
     "@mantine/hooks": "^4.2.9",
     "@mantine/next": "^4.2.9",
     "axios": "^0.27.2",

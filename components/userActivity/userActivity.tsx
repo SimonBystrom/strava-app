@@ -1,4 +1,5 @@
 import { Select } from '@mantine/core'
+import { DateRangePicker } from '@mantine/dates'
 import classNames from 'classnames'
 import { FC, useState } from 'react'
 import { RunningData, useRunsByPeriod } from '../../hooks/runsByPeriod'
@@ -7,19 +8,19 @@ import { convertToKm } from '../../utils/distanceConverter'
 import classes from './userActivity.module.scss'
 
 
-enum TimePeriods {
+export enum TimePeriod {
   Month = 'month',
   Year = 'year',
   All = 'all'
 }
 interface MilestonesProps {
-  period: TimePeriods
+  period: TimePeriod
   activities: Activity[]
 }
 
 const Milestones: FC<MilestonesProps> = ({period, activities}) => {
   const { month, year, all } = useRunsByPeriod(activities)
-  if(period === TimePeriods.Month) {
+  if(period === TimePeriod.Month) {
     return (
       <>
         <div>2KM: {month.twoKM}</div>
@@ -28,7 +29,7 @@ const Milestones: FC<MilestonesProps> = ({period, activities}) => {
       </>
     )
   }
-  if (period === TimePeriods.Year) {
+  if (period === TimePeriod.Year) {
     return (
       <>
         <div>2KM: {year.twoKM}</div>
@@ -37,7 +38,7 @@ const Milestones: FC<MilestonesProps> = ({period, activities}) => {
       </>
     )
   }
-  if (period === TimePeriods.All) {
+  if (period === TimePeriod.All) {
     return (
       <>
         <div>2KM: {all.twoKM}</div>
@@ -54,9 +55,10 @@ interface UserActivityProps {
 }
 
 const UserActivity: FC<UserActivityProps> = ({ activities }) => {
-  const { month, year, all } = useRunsByPeriod(activities)
-  const [milestonePeriod, setMilestonePeriod] = useState<string | null>(TimePeriods.All)
-
+  const [milestonePeriod, setMilestonePeriod] = useState<string | null>(TimePeriod.All)
+  const [customPeriod, setCustomPeriod] = useState<[Date | null, Date | null]>([null, null])
+  const { month, year, all, custom } = useRunsByPeriod(activities, customPeriod)
+  console.log(custom)
   return (
     <div className={classes.ActivitiesContainer}>
       <div >
@@ -79,6 +81,22 @@ const UserActivity: FC<UserActivityProps> = ({ activities }) => {
           <p>Distance: {convertToKm(all.distance)} km</p>
           <p>Time: {all.time.hours}:{all.time.minutes}:{all.time.seconds} </p>
         </div>
+        <div>
+          <h4>Custom range</h4>
+          <DateRangePicker
+            label='custom date range'
+            placeholder='Pick custom range'
+            value={customPeriod}
+            onChange={setCustomPeriod}
+          />
+          {custom &&
+            <>
+            <p>Total: {custom.total}</p>
+            <p>Distance: {convertToKm(custom.distance)} km</p>
+            <p>Time: {custom.time.hours}:{custom.time.minutes}:{custom.time.seconds} </p>
+            </>
+          }
+        </div>
       </div>
       <div>
         <h2>MILESTONES</h2>
@@ -86,14 +104,14 @@ const UserActivity: FC<UserActivityProps> = ({ activities }) => {
           label='Select time period'
           placeholder='Select time period'
           data={[
-            { value: TimePeriods.Month, label: 'This month' },
-            { value: TimePeriods.Year, label: 'This year' },
-            { value: TimePeriods.All, label: 'All Time' }
+            { value: TimePeriod.Month, label: 'This month' },
+            { value: TimePeriod.Year, label: 'This year' },
+            { value: TimePeriod.All, label: 'All Time' }
           ]}
           value={milestonePeriod}
           onChange={setMilestonePeriod}
         />
-        <Milestones period={milestonePeriod as TimePeriods} activities={activities}/>
+        <Milestones period={milestonePeriod as TimePeriod} activities={activities}/>
       </div>
     </div>
   )

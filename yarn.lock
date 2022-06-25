@@ -121,21 +121,26 @@
   "resolved" "https://registry.npmjs.org/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz"
   "version" "1.2.1"
 
-"@mantine/core@^4.2.9":
-  "integrity" "sha512-25krgKF7FUFDsF5IYk+A/7GjgAZFzEcaFmGvscXS/7ccOickBmXzENwY9eJpv+MDo/7Sj5eiS0ZBi+WN27tdcw=="
-  "resolved" "https://registry.npmjs.org/@mantine/core/-/core-4.2.9.tgz"
-  "version" "4.2.9"
+"@mantine/core@^4.2.9", "@mantine/core@4.2.10":
+  "integrity" "sha512-UCPhDcumygfBvik64VkMnBvqy0ZN9q+1AQ0fPdK8aAUvjRBWSyH0dJPL55vsK1ODboKktSEsyjHtb09DroL7fA=="
+  "resolved" "https://registry.npmjs.org/@mantine/core/-/core-4.2.10.tgz"
+  "version" "4.2.10"
   dependencies:
-    "@mantine/styles" "4.2.9"
+    "@mantine/styles" "4.2.10"
     "@popperjs/core" "^2.9.3"
     "@radix-ui/react-scroll-area" "^0.1.1"
     "react-popper" "^2.2.5"
     "react-textarea-autosize" "^8.3.2"
 
-"@mantine/hooks@^4.2.9", "@mantine/hooks@4.2.9":
-  "integrity" "sha512-oLtlSXkl99vPGBTR9yoVCWoCQ25Bc4WhPci31iERMLMM/0fz85CZayQcAC4etq6un6rDiRNu6jq0YB1S5stmPg=="
-  "resolved" "https://registry.npmjs.org/@mantine/hooks/-/hooks-4.2.9.tgz"
-  "version" "4.2.9"
+"@mantine/dates@^4.2.10":
+  "integrity" "sha512-O6gaXr3Cj+J+rMxmy6t9PReqUHejpJh5JBK+kC3maNao4MqTFyf7cXftf4yZuePkPlBXVpN7+3oVBYG9JzlEjw=="
+  "resolved" "https://registry.npmjs.org/@mantine/dates/-/dates-4.2.10.tgz"
+  "version" "4.2.10"
+
+"@mantine/hooks@^4.2.9", "@mantine/hooks@4.2.10":
+  "integrity" "sha512-gVYWeE4Ieu6FBwh9h/3FjcrrNzKx1k6Yw07/LSngJP0uT3fLt1gvY2p4PtPpOh7z2/RpTXBR1x+dOgEUKomYUQ=="
+  "resolved" "https://registry.npmjs.org/@mantine/hooks/-/hooks-4.2.10.tgz"
+  "version" "4.2.10"
 
 "@mantine/next@^4.2.9":
   "integrity" "sha512-avbxQeR9EerSHJ3HOg7rPAyBUoJ3/ifvYifyP/Sd6ap3hGzF1a/NN4tSRjoRmz1jTyAdmKIhL0k0alwi1OqA2A=="
@@ -157,6 +162,18 @@
     "@mantine/styles" "4.2.9"
     "csstype" "3.0.9"
     "html-react-parser" "1.3.0"
+
+"@mantine/styles@4.2.10":
+  "integrity" "sha512-dWwCzBLYE8CwPJSPlV3MyIuR4ET3u6O+T+VmxY0lab6w/bqflseNSh9UBIW2AUoIYtxPVDjbZfzeTw32aV8CxA=="
+  "resolved" "https://registry.npmjs.org/@mantine/styles/-/styles-4.2.10.tgz"
+  "version" "4.2.10"
+  dependencies:
+    "@emotion/cache" "11.7.1"
+    "@emotion/react" "11.7.1"
+    "@emotion/serialize" "1.0.2"
+    "@emotion/utils" "1.0.0"
+    "clsx" "^1.1.1"
+    "csstype" "3.0.9"
 
 "@mantine/styles@4.2.9":
   "integrity" "sha512-UT5m1412N20HPl+Mg2zTN7gP34J1GIa3o7eQ+fHThAQkAMm/vBehzX8nkbdxwyYkwuu6+/4kizcbM/Op4jMI3g=="
@@ -752,6 +769,11 @@
   "integrity" "sha512-sdQSFB7+llfUcQHUQO3+B8ERRj0Oa4w9POWMI/puGtuf7gFywGmkaLCElnudfTiKZV+NvHqL0ifzdrI8Ro7ESA=="
   "resolved" "https://registry.npmjs.org/damerau-levenshtein/-/damerau-levenshtein-1.0.8.tgz"
   "version" "1.0.8"
+
+"dayjs@^1.10.5":
+  "integrity" "sha512-xxwlswWOlGhzgQ4TKzASQkUhqERI3egRNqgV4ScR8wlANA/A9tZ7miXa44vTTKEq5l7vWoL5G57bG3zA+Kow0A=="
+  "resolved" "https://registry.npmjs.org/dayjs/-/dayjs-1.11.3.tgz"
+  "version" "1.11.3"
 
 "debug@^2.6.9":
   "integrity" "sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA=="
