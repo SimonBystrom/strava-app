@@ -11,43 +11,58 @@ import classes from './userActivity.module.scss'
 export enum TimePeriod {
   Month = 'month',
   Year = 'year',
-  All = 'all'
+  All = 'all',
+  Custom = 'custom'
 }
 interface MilestonesProps {
   period: TimePeriod
   activities: Activity[]
+  customPeriod: [Date | null, Date | null]
 }
 
-const Milestones: FC<MilestonesProps> = ({period, activities}) => {
-  const { month, year, all } = useRunsByPeriod(activities)
-  if(period === TimePeriod.Month) {
-    return (
-      <>
-        <div>2KM: {month.twoKM}</div>
-        <div>5KM: {month.fiveKM}</div>
-        <div>10KM: {month.tenKM}</div>
-      </>
-    )
+const Milestones: FC<MilestonesProps> = ({period, activities, customPeriod}) => {
+  const { month, year, all, custom } = useRunsByPeriod(activities, customPeriod)
+  switch (period) {
+    case TimePeriod.Month:
+      return (
+        <>
+          <div>2KM: {month.twoKM}</div>
+          <div>5KM: {month.fiveKM}</div>
+          <div>10KM: {month.tenKM}</div>
+        </>
+      )
+    case TimePeriod.Year:
+      return (
+        <>
+          <div>2KM: {year.twoKM}</div>
+          <div>5KM: {year.fiveKM}</div>
+          <div>10KM: {year.tenKM}</div>
+        </>
+      )
+    case TimePeriod.All:
+      return (
+        <>
+          <div>2KM: {all.twoKM}</div>
+          <div>5KM: {all.fiveKM}</div>
+          <div>10KM: {all.tenKM}</div>
+        </>
+      )
+    case TimePeriod.Custom:
+      return (
+        <>
+        { custom &&
+          <>
+            <div>2KM: {custom.twoKM}</div>
+            <div>5KM: {custom.fiveKM}</div>
+            <div>10KM: {custom.tenKM}</div>
+          </>
+        }
+        </>
+
+      )
+    default:
+      return <></>
   }
-  if (period === TimePeriod.Year) {
-    return (
-      <>
-        <div>2KM: {year.twoKM}</div>
-        <div>5KM: {year.fiveKM}</div>
-        <div>10KM: {year.tenKM}</div>
-      </>
-    )
-  }
-  if (period === TimePeriod.All) {
-    return (
-      <>
-        <div>2KM: {all.twoKM}</div>
-        <div>5KM: {all.fiveKM}</div>
-        <div>10KM: {all.tenKM}</div>
-      </>
-    )
-  }
-  return (<></>)
 }
 
 interface UserActivityProps {
@@ -58,7 +73,7 @@ const UserActivity: FC<UserActivityProps> = ({ activities }) => {
   const [milestonePeriod, setMilestonePeriod] = useState<string | null>(TimePeriod.All)
   const [customPeriod, setCustomPeriod] = useState<[Date | null, Date | null]>([null, null])
   const { month, year, all, custom } = useRunsByPeriod(activities, customPeriod)
-  console.log(custom)
+  // TODO: Refactor the 'Activities' List into it's own component
   return (
     <div className={classes.ActivitiesContainer}>
       <div >
@@ -106,12 +121,13 @@ const UserActivity: FC<UserActivityProps> = ({ activities }) => {
           data={[
             { value: TimePeriod.Month, label: 'This month' },
             { value: TimePeriod.Year, label: 'This year' },
-            { value: TimePeriod.All, label: 'All Time' }
+            { value: TimePeriod.All, label: 'All Time' },
+            { value: TimePeriod.Custom, label: 'Custom' }
           ]}
           value={milestonePeriod}
           onChange={setMilestonePeriod}
         />
-        <Milestones period={milestonePeriod as TimePeriod} activities={activities}/>
+        <Milestones period={milestonePeriod as TimePeriod} activities={activities} customPeriod={customPeriod}/>
       </div>
     </div>
   )
