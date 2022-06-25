@@ -1,16 +1,17 @@
 import { Activity, ActivityTime } from "../stores/userActivitiesStore"
 import { convertToHourMinSec } from "../utils/timeConverter"
 
-// export enum TimePeriods {
-//   Month = 'month',
-//   Year = 'year',
-//   All = 'all'
-// }
 
-type RunningData = {
+
+export type RunningData = {
   total: number,
   time: ActivityTime,
-  distance: number
+  distance: number,
+  twoKM: number,
+  fiveKM: number,
+  tenKM: number,
+  // halfMarathon: number,
+  // marathon: number,
 }
 
 const getMonthActivities = (activities: Activity[], currentDate: Date): RunningData => {
@@ -22,10 +23,16 @@ const getMonthActivities = (activities: Activity[], currentDate: Date): RunningD
   const totalRuns = filteredData.length
   const totalTime = convertToHourMinSec(filteredData.reduce((prev, curr) => prev + curr.unparsedTime, initialValue))
   const totalDistance = filteredData.reduce((prev, curr) => prev + curr.distance, initialValue)
+  const twoKM = filteredData.filter(activity => activity.distance > 2000 && activity.distance < 5000).length
+  const fiveKM = filteredData.filter(activity => activity.distance > 5000 && activity.distance < 10000).length
+  const tenKM = filteredData.filter(activity => activity.distance > 10000).length
   return {
     total: totalRuns,
     time: totalTime,
     distance: totalDistance,
+    twoKM,
+    fiveKM,
+    tenKM,
   }
 }
 
@@ -38,10 +45,16 @@ const getYearActivities = (activities: Activity[], currentDate: Date): RunningDa
   const totalRuns = filteredData.length
   const totalTime = convertToHourMinSec(filteredData.reduce((prev, curr) => prev + curr.unparsedTime, initialValue))
   const totalDistance = filteredData.reduce((prev, curr) => prev + curr.distance, initialValue)
+  const twoKM = filteredData.filter(activity => activity.distance > 2000 && activity.distance < 5000).length
+  const fiveKM = filteredData.filter(activity => activity.distance > 5000 && activity.distance < 10000).length
+  const tenKM = filteredData.filter(activity => activity.distance > 10000).length
   return {
     total: totalRuns,
     time: totalTime,
     distance: totalDistance,
+    twoKM,
+    fiveKM,
+    tenKM,
   }
 }
 
@@ -49,10 +62,16 @@ const getAllActivities = (activities: Activity[]): RunningData => {
   let initialValue = 0
   const totalTime = convertToHourMinSec(activities.reduce((prev, curr) => prev + curr.unparsedTime, initialValue))
   const totalDistance = activities.reduce((prev, curr) => prev + curr.distance, initialValue)
+  const twoKM = activities.filter(activity => activity.distance > 2000 && activity.distance < 5000).length
+  const fiveKM = activities.filter(activity => activity.distance > 5000 && activity.distance < 10000).length
+  const tenKM = activities.filter(activity => activity.distance > 10000).length
   return {
     total: activities.length,
     time: totalTime,
-    distance: totalDistance
+    distance: totalDistance,
+    twoKM,
+    fiveKM,
+    tenKM,
   }
 }
 
