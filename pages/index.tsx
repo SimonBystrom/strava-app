@@ -4,12 +4,14 @@ import Link from 'next/link'
 import { emptyAthlete, useUserStore } from '../stores/userStore'
 import styles from '../styles/Home.module.scss'
 import { handleLogin } from '../utils/strava'
+import { trpc } from '../utils/trpc'
 
 
-const Home: NextPage = () => {
+const Home: NextPage = (props: any) => {
+  const {data, isLoading} = trpc.useQuery(['getAllGoals'])
+
+  console.log('db goals',data)
   const { athlete, setAthlete } = useUserStore()
-  console.log('ath', athlete)
-  console.log('ath', !!athlete.id)
   return (
     <div className={styles.container}>
       <Head>
@@ -25,6 +27,7 @@ const Home: NextPage = () => {
             <button onClick={() => setAthlete(emptyAthlete)}>Logout</button>
           </>
         }
+        <code>{props.goals}</code>
       </>
     </div>
   )
