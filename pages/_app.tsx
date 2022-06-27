@@ -3,8 +3,8 @@ import '../styles/variables.scss'
 import type { AppProps } from 'next/app'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { withTRPC } from '@trpc/next';
-import { AppType } from 'next/dist/shared/lib/utils';
-import { AppRouter } from './api/trpc/[trpc]';
+import type { AppRouter } from '../backend/router/index'
+import superjson from 'superjson'
 
 const queryClient = new QueryClient()
 
@@ -29,6 +29,7 @@ export default withTRPC<AppRouter>({
 
     return {
       url,
+      transformer: superjson,
       /**
        * @link https://react-query.tanstack.com/reference/QueryClient
        */

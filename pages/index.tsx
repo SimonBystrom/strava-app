@@ -8,9 +8,12 @@ import { trpc } from '../utils/trpc'
 
 
 const Home: NextPage = (props: any) => {
-  const {data, isLoading} = trpc.useQuery(['getAllGoals'])
-
-  console.log('db goals',data)
+  const {data, isLoading} = trpc.useQuery(['goals.get-all'])
+  const { mutate } =  trpc.useMutation('goals.create')
+  const createGoal = () => {
+    mutate({ name: 'New Goal' })
+  }
+  console.log('db goals', data)
   const { athlete, setAthlete } = useUserStore()
   return (
     <div className={styles.container}>
@@ -28,6 +31,7 @@ const Home: NextPage = (props: any) => {
           </>
         }
         <code>{props.goals}</code>
+        <button onClick={() => createGoal()}>new</button>
       </>
     </div>
   )
