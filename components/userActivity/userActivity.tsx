@@ -120,11 +120,10 @@ const UserActivity: FC<UserActivityProps> = ({ activities }) => {
             }}/>
           </div>
           <div className={classes.CustomRangeContainer}>
-            {custom && <TimePeriodData label='Custom Range' period={custom} />}
+            {custom ? <TimePeriodData label='Custom Range' period={custom} /> : <div></div>}
             <div>
               <h3>Custom range</h3>
               <DateRangePicker
-                label='custom date range'
                 placeholder='Pick custom range'
                 value={customPeriod}
                 onChange={setCustomPeriod}
