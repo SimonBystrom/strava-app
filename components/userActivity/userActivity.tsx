@@ -1,14 +1,13 @@
-import { Select, Indicator } from '@mantine/core'
-import { Calendar, DateRangePicker } from '@mantine/dates'
-import classNames from 'classnames'
+import { Select } from '@mantine/core'
+import { Calendar } from '@mantine/dates'
 import dayjs from 'dayjs'
 import { FC, useState } from 'react'
-import { RunningData, useRunsByPeriod } from '../../hooks/runsByPeriod'
+import { useRunsByPeriod } from '../../hooks/runsByPeriod'
 import { Activity } from '../../stores/userActivitiesStore'
-import { convertToKm } from '../../utils/distanceConverter'
 import classes from './userActivity.module.scss'
-import { BiRun, BiTimeFive, BiHash } from 'react-icons/bi'
 import { useAllActivityDates } from '../../hooks/allActivityDates'
+import TimePeriodData from './timePeriodData/timePeriodData'
+import CustomTimeRangeData from './customTimeRangeData/customTimeRangeData'
 
 
 export enum TimePeriod {
@@ -68,23 +67,6 @@ const Milestones: FC<MilestonesProps> = ({period, activities, customPeriod}) => 
   }
 }
 
-interface TimePeriodDataProps {
-  period: RunningData
-  label?: string
-}
-const TimePeriodData: FC<TimePeriodDataProps> = ({ period, label }) => {
-  return (
-    <div>
-      {label && <h3>{label}</h3>}
-      <div className={classes.TimePeriodData}>
-        <div className={classes.DataContainer}><BiRun /> <p>{convertToKm(period.distance)} km</p></div>
-        <div className={classes.DataContainer}><BiTimeFive /> <p>{period.time.hours}:{period.time.minutes}:{period.time.seconds} </p></div>
-        <div className={classes.DataContainer}><BiHash /> <p>{period.total}</p></div>
-      </div>
-    </div>
-  )
-}
-
 interface UserActivityProps {
   activities: Activity[]
 }
@@ -98,8 +80,6 @@ const UserActivity: FC<UserActivityProps> = ({ activities }) => {
   // TODO: Refactor the 'Activities' List into it's own component
   return (
     <div className={classes.ActivitesPageWrapper}>
-
-
       <div className={classes.ActivitiesContainer}>
         <h2>ACTIVITIES</h2>
         <div className={classes.ActivityGridWrapper}>
@@ -110,30 +90,31 @@ const UserActivity: FC<UserActivityProps> = ({ activities }) => {
           </div>
           <div className={classes.Calendar}>
             <Calendar dayStyle={(date) => {
+              date.toISOString().slice(0, -1)
               const dateMatch = allDates.some(activityDate => {
                 return (activityDate.getFullYear() === date.getFullYear()) && (activityDate.getMonth() === date.getMonth()) && (activityDate.getDate() === date.getDate())
               })
               if (dateMatch){
-                return { backgroundColor: 'red', borderRadius: '50%', color: 'white', opacity: '0.5' }
+                return {
+                  backgroundColor: 'red',
+                  borderRadius: '50%',
+                  color: 'white',
+                  opacity: '0.8',
+                  transform: 'scale(0.8)',
+                  fontSize: '16px',
+                }
               }
               return {}
             }}/>
           </div>
-          <div className={classes.CustomRangeContainer}>
-            {custom ? <TimePeriodData label='Custom Range' period={custom} /> : <div></div>}
-            <div>
-              <h3>Custom range</h3>
-              <DateRangePicker
-                placeholder='Pick custom range'
-                value={customPeriod}
-                onChange={setCustomPeriod}
-              />
-            </div>
-          </div>
+          <CustomTimeRangeData
+            label='Custom Range'
+            period={custom}
+            customPeriod={customPeriod}
+            setCustomPeriod={setCustomPeriod}
+          />
         </div>
       </div>
-
-
       <div className={classes.MilestonesContainer}>
         <h2>MILESTONES</h2>
         <Select
@@ -151,7 +132,6 @@ const UserActivity: FC<UserActivityProps> = ({ activities }) => {
         <Milestones period={milestonePeriod as TimePeriod} activities={activities} customPeriod={customPeriod}/>
       </div>
       <div className={classes.GoalsContainer}>
-
       </div>
     </div>
   )
