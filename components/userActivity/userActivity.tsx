@@ -1,11 +1,14 @@
-import { Select } from '@mantine/core'
-import { DateRangePicker } from '@mantine/dates'
+import { Select, Indicator } from '@mantine/core'
+import { Calendar, DateRangePicker } from '@mantine/dates'
 import classNames from 'classnames'
+import dayjs from 'dayjs'
 import { FC, useState } from 'react'
-import { useRunsByPeriod } from '../../hooks/runsByPeriod'
+import { RunningData, useRunsByPeriod } from '../../hooks/runsByPeriod'
 import { Activity } from '../../stores/userActivitiesStore'
 import { convertToKm } from '../../utils/distanceConverter'
 import classes from './userActivity.module.scss'
+import { BiRun, BiTimeFive, BiHash } from 'react-icons/bi'
+import { useAllActivityDates } from '../../hooks/allActivityDates'
 
 
 export enum TimePeriod {
@@ -65,6 +68,23 @@ const Milestones: FC<MilestonesProps> = ({period, activities, customPeriod}) => 
   }
 }
 
+interface TimePeriodDataProps {
+  period: RunningData
+  label?: string
+}
+const TimePeriodData: FC<TimePeriodDataProps> = ({ period, label }) => {
+  return (
+    <div>
+      {label && <h3>{label}</h3>}
+      <div className={classes.TimePeriodData}>
+        <div className={classes.DataContainer}><BiRun /> <p>{convertToKm(period.distance)} km</p></div>
+        <div className={classes.DataContainer}><BiTimeFive /> <p>{period.time.hours}:{period.time.minutes}:{period.time.seconds} </p></div>
+        <div className={classes.DataContainer}><BiHash /> <p>{period.total}</p></div>
+      </div>
+    </div>
+  )
+}
+
 interface UserActivityProps {
   activities: Activity[]
 }
@@ -73,47 +93,49 @@ const UserActivity: FC<UserActivityProps> = ({ activities }) => {
   const [milestonePeriod, setMilestonePeriod] = useState<string | null>(TimePeriod.All)
   const [customPeriod, setCustomPeriod] = useState<[Date | null, Date | null]>([null, null])
   const { month, year, all, custom } = useRunsByPeriod(activities, customPeriod)
+  const allDates = useAllActivityDates(activities)
+  const currentTime = new Date()
   // TODO: Refactor the 'Activities' List into it's own component
   return (
-    <div className={classes.ActivitiesContainer}>
-      <div >
+    <div className={classes.ActivitesPageWrapper}>
+
+
+      <div className={classes.ActivitiesContainer}>
         <h2>ACTIVITIES</h2>
-        <div>
-          <h4>This month</h4>
-          <p>Total: {month.total}</p>
-          <p>Distance: {convertToKm(month.distance)} km</p>
-          <p>Time: {month.time.hours}:{month.time.minutes}:{month.time.seconds} </p>
-        </div>
-        <div>
-          <h4>This year</h4>
-          <p>Total: {year.total}</p>
-          <p>Distance: {convertToKm(year.distance)} km</p>
-          <p>Time: {year.time.hours}:{year.time.minutes}:{year.time.seconds} </p>
-        </div>
-        <div>
-          <h4>All time</h4>
-          <p>Total: {all.total}</p>
-          <p>Distance: {convertToKm(all.distance)} km</p>
-          <p>Time: {all.time.hours}:{all.time.minutes}:{all.time.seconds} </p>
-        </div>
-        <div>
-          <h4>Custom range</h4>
-          <DateRangePicker
-            label='custom date range'
-            placeholder='Pick custom range'
-            value={customPeriod}
-            onChange={setCustomPeriod}
-          />
-          {custom &&
-            <>
-            <p>Total: {custom.total}</p>
-            <p>Distance: {convertToKm(custom.distance)} km</p>
-            <p>Time: {custom.time.hours}:{custom.time.minutes}:{custom.time.seconds} </p>
-            </>
-          }
+        <div className={classes.ActivityGridWrapper}>
+          <div className={classes.TimeLineDataContainer}>
+            <TimePeriodData label={dayjs(currentTime).format('MMMM')} period={month}/>
+            <TimePeriodData label={dayjs(currentTime).format('YYYY')} period={year}/>
+            <TimePeriodData label='All Time' period={all}/>
+          </div>
+          <div className={classes.Calendar}>
+            <Calendar dayStyle={(date) => {
+              const dateMatch = allDates.some(activityDate => {
+                return (activityDate.getFullYear() === date.getFullYear()) && (activityDate.getMonth() === date.getMonth()) && (activityDate.getDate() === date.getDate())
+              })
+              if (dateMatch){
+                return { backgroundColor: 'red', borderRadius: '50%', color: 'white', opacity: '0.5' }
+              }
+              return {}
+            }}/>
+          </div>
+          <div className={classes.CustomRangeContainer}>
+            {custom && <TimePeriodData label='Custom Range' period={custom} />}
+            <div>
+              <h3>Custom range</h3>
+              <DateRangePicker
+                label='custom date range'
+                placeholder='Pick custom range'
+                value={customPeriod}
+                onChange={setCustomPeriod}
+              />
+            </div>
+          </div>
         </div>
       </div>
-      <div>
+
+
+      <div className={classes.MilestonesContainer}>
         <h2>MILESTONES</h2>
         <Select
           label='Select time period'
@@ -128,6 +150,9 @@ const UserActivity: FC<UserActivityProps> = ({ activities }) => {
           onChange={setMilestonePeriod}
         />
         <Milestones period={milestonePeriod as TimePeriod} activities={activities} customPeriod={customPeriod}/>
+      </div>
+      <div className={classes.GoalsContainer}>
+
       </div>
     </div>
   )

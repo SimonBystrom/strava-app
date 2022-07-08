@@ -16,9 +16,11 @@ const Redirect: NextPage = () => {
       const tokens = await authGetter(stravaAuthToken)
 
       // Save tokens to store for easier fetch on tabs
-      setAccessToken(tokens.access_token)
-      setRefreshToken(tokens.refresh_token)
-      setAthlete(tokens.athlete)
+      if(tokens) {
+        setAccessToken(tokens.access_token)
+        setRefreshToken(tokens.refresh_token)
+        setAthlete(tokens.athlete)
+      }
     }
     if(router.query.code) {
       authenticate(router.query)

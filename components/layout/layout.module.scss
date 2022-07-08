@@ -52,4 +52,5 @@
   width: calc(100% - var(--sidebar-width));
   min-height: calc(100% - var(--header-height));
   background-color: var(--color-light-grey);
+  padding: var(--spacing-xl);
 }

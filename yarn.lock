@@ -881,7 +881,7 @@
   "resolved" "https://registry.npmjs.org/damerau-levenshtein/-/damerau-levenshtein-1.0.8.tgz"
   "version" "1.0.8"
 
-"dayjs@^1.10.5":
+"dayjs@^1.10.5", "dayjs@^1.11.3":
   "integrity" "sha512-xxwlswWOlGhzgQ4TKzASQkUhqERI3egRNqgV4ScR8wlANA/A9tZ7miXa44vTTKEq5l7vWoL5G57bG3zA+Kow0A=="
   "resolved" "https://registry.npmjs.org/dayjs/-/dayjs-1.11.3.tgz"
   "version" "1.11.3"

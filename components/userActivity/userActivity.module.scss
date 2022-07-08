@@ -1,4 +1,104 @@
+.ActivitesPageWrapper {
+  display: grid;
+  grid-template-areas:
+    'activity milestones'
+    'activity goals';
+  grid-template-columns: minmax(66%, 1fr) 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: var(--spacing-xl);
+
+  h2 {
+    margin: 0;
+  }
+}
+
 .ActivitiesContainer {
-  display: flex;
-  justify-content: space-around;
+  grid-area: activity;
+  background-color: var(--color-white);
+  padding: var(--spacing);
+
+
+  .ActivityGridWrapper {
+    display: grid;
+    grid-template-areas:
+      'timeData calendar'
+      'customRange customRange'
+      ;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr min-content;
+    gap: var(--spacing-lg);
+  }
+
+  h3 {
+    color: var(--color-accent-black);
+    font-size: var(--font-size-lg);
+    line-height: var(--spacing-xl);
+    margin: var(--spacing-xl) 0 var(--spacing-md) 0;
+  }
+
+  .TimeLineDataContainer {
+    grid-area: timeData;
+  }
+
+  .Calendar {
+    grid-area: calendar;
+  }
+
+  .CustomRangeContainer {
+    grid-area: customRange;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-lg);
+  }
+  .TimePeriodData {
+    display: flex;
+    gap: var(--spacing-lg);
+    align-items: center;
+    justify-content: space-between;
+
+
+    div:nth-of-type(1) {
+      svg {
+        color: red;
+      }
+    }
+
+    div:nth-of-type(2) {
+      svg {
+        color: blue;
+      }
+    }
+
+    div:nth-of-type(3) {
+      svg {
+        color: green;
+      }
+    }
+    .DataContainer {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      svg {
+        width: 24px;
+        height: 24px;
+      }
+      p {
+        margin: 0;
+        font-style: italic;
+        color: var(--color-accent-black);
+      }
+    }
+  }
+}
+
+.MilestonesContainer {
+  grid-area: milestones;
+    background-color: var(--color-white);
+    padding: var(--spacing);
+}
+
+.GoalsContainer {
+  grid-area: goals;
+    background-color: var(--color-white);
+    padding: var(--spacing);
 }
