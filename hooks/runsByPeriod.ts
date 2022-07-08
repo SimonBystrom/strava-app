@@ -1,12 +1,20 @@
-import { TimePeriod } from "../components/userActivity/userActivity"
 import { Activity, ActivityTime } from "../stores/userActivitiesStore"
 import { convertToHourMinSec } from "../utils/timeConverter"
+
+export enum TimePeriod {
+  Month = 'month',
+  Year = 'year',
+  All = 'all',
+  Custom = 'custom'
+}
 
 export type RunningData = {
   total: number,
   time: ActivityTime,
   distance: number,
+  oneKM: number,
   twoKM: number,
+  threeKM: number,
   fiveKM: number,
   tenKM: number,
   // halfMarathon: number,
@@ -44,8 +52,12 @@ const getActivitiesByPeriod = (
       convertToHourMinSec(filteredData.reduce((prev, curr) => prev + curr.unparsedTime, initialValue))
     const totalDistance =
       filteredData.reduce((prev, curr) => prev + curr.distance, initialValue)
+  const oneKM =
+    filteredData.filter(activity => activity.distance > 1000 && activity.distance < 2000).length
     const twoKM =
-      filteredData.filter(activity => activity.distance > 2000 && activity.distance < 5000).length
+      filteredData.filter(activity => activity.distance > 2000 && activity.distance < 3000).length
+  const threeKM =
+    filteredData.filter(activity => activity.distance > 3000 && activity.distance < 5000).length
     const fiveKM =
       filteredData.filter(activity => activity.distance > 5000 && activity.distance < 10000).length
     const tenKM =
@@ -54,7 +66,9 @@ const getActivitiesByPeriod = (
       total: totalRuns,
       time: totalTime,
       distance: totalDistance,
+      oneKM,
       twoKM,
+      threeKM,
       fiveKM,
       tenKM,
     }
@@ -75,14 +89,19 @@ const getCustomPeriod = (
       const activityDate = new Date(activity.startDateLocal.slice(0, -1))
       return (activityDate > customPeriod[0]! && activityDate < customPeriod[1]!)
     })
+    // TODO: Clean up and make helper functions -> More dry
     let initialValue = 0
     const totalRuns = filteredData.length
     const totalTime =
       convertToHourMinSec(filteredData.reduce((prev, curr) => prev + curr.unparsedTime, initialValue))
     const totalDistance =
       filteredData.reduce((prev, curr) => prev + curr.distance, initialValue)
+    const oneKM =
+      filteredData.filter(activity => activity.distance > 1000 && activity.distance < 2000).length
     const twoKM =
-      filteredData.filter(activity => activity.distance > 2000 && activity.distance < 5000).length
+      filteredData.filter(activity => activity.distance > 2000 && activity.distance < 3000).length
+    const threeKM =
+      filteredData.filter(activity => activity.distance > 3000 && activity.distance < 5000).length
     const fiveKM =
       filteredData.filter(activity => activity.distance > 5000 && activity.distance < 10000).length
     const tenKM =
@@ -91,7 +110,9 @@ const getCustomPeriod = (
       total: totalRuns,
       time: totalTime,
       distance: totalDistance,
+      oneKM,
       twoKM,
+      threeKM,
       fiveKM,
       tenKM,
     }
