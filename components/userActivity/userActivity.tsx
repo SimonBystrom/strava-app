@@ -2,28 +2,13 @@ import { Select, Tabs } from '@mantine/core'
 import { Calendar } from '@mantine/dates'
 import dayjs from 'dayjs'
 import { FC, useState } from 'react'
-import { RunningData, useRunsByPeriod } from '../../hooks/runsByPeriod'
+import { useRunsByPeriod } from '../../hooks/runsByPeriod'
 import { Activity } from '../../stores/userActivitiesStore'
 import classes from './userActivity.module.scss'
 import { useAllActivityDates } from '../../hooks/allActivityDates'
 import TimePeriodData from './timePeriodData/timePeriodData'
 import CustomTimeRangeData from './customTimeRangeData/customTimeRangeData'
-
-interface MilestoneTabDataProps {
-  period: RunningData
-}
-
-const MileStoneTabData: FC<MilestoneTabDataProps> = ({period}) => {
-  return (
-    <>
-      <div>1KM: {period.oneKM}</div>
-      <div>2KM: {period.twoKM}</div>
-      <div>3KM: {period.threeKM}</div>
-      <div>5KM: {period.fiveKM}</div>
-      <div>10KM: {period.tenKM}</div>
-    </>
-  )
-}
+import MilestoneTabData from './milestonesData/milestones'
 
 interface MilestonesProps {
   activities: Activity[]
@@ -32,22 +17,21 @@ interface MilestonesProps {
 
 const Milestones: FC<MilestonesProps> = ({ activities, customPeriod}) => {
   const { month, year, all, custom } = useRunsByPeriod(activities, customPeriod)
-
   const currentTime = new Date()
 
   return (
     <Tabs>
       <Tabs.Tab label={dayjs(currentTime).format('MMMM')} title='Show monthly milestones' color='red'>
-        <MileStoneTabData period={month}/>
+        <MilestoneTabData period={month}/>
       </Tabs.Tab>
       <Tabs.Tab label={dayjs(currentTime).format('YYYY')} title='Show yearly milestones' color='blue'>
-        <MileStoneTabData period={year} />
+        <MilestoneTabData period={year} />
       </Tabs.Tab>
       <Tabs.Tab label='All Time' title='Show all time milestones' color='green'>
-        <MileStoneTabData period={all} />
+        <MilestoneTabData period={all} />
       </Tabs.Tab>
       <Tabs.Tab label='Custom' title={custom ? 'Show custom milestones' : 'Select custom date range to enable custom tab'} color='gray' disabled={!custom}>
-        {custom && <MileStoneTabData period={custom} /> }
+        {custom && <MilestoneTabData period={custom} /> }
       </Tabs.Tab>
     </Tabs>
   )
@@ -66,7 +50,7 @@ const UserActivity: FC<UserActivityProps> = ({ activities }) => {
   return (
     <div className={classes.ActivitesPageWrapper}>
       <div className={classes.ActivitiesContainer}>
-        <h2>ACTIVITIES</h2>
+      <h2>ACTIVITIES</h2>
         <div className={classes.ActivityGridWrapper}>
           <div className={classes.TimeLineDataContainer}>
             <TimePeriodData label={dayjs(currentTime).format('MMMM')} period={month}/>
