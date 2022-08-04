@@ -1,0 +1,71 @@
+.ActivitesPageWrapper {
+  display: grid;
+  grid-template-areas:
+    'activity milestones'
+    'activity goals';
+  grid-template-columns: minmax(66%, 1fr) 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: var(--spacing-xl);
+
+  h2 {
+    margin: 0 0 var(--spacing-lg) 0;
+    color: #4c5454;
+    font-size: var(--font-size-md);
+    font-style: italic;
+  }
+}
+
+.ActivitiesContainer {
+  grid-area: activity;
+  background-color: var(--color-white);
+  padding: var(--spacing);
+
+
+  .ActivityGridWrapper {
+    display: grid;
+    grid-template-areas:
+      'timeData calendar'
+      'customRange customRange'
+      ;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr min-content;
+    gap: var(--spacing-lg);
+  }
+
+  h3 {
+    color: var(--color-accent-black);
+    font-size: var(--font-size-lg);
+    line-height: var(--spacing-xl);
+    margin: 0 0 var(--spacing-md) 0;
+  }
+
+  .TimeLineDataContainer {
+    grid-area: timeData;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+  }
+
+  .Calendar {
+    grid-area: calendar;
+    justify-self: center;
+  }
+
+
+}
+
+.MilestonesContainer {
+  grid-area: milestones;
+  background-color: var(--color-white);
+  padding: var(--spacing);
+
+
+}
+
+.GoalsContainer {
+  grid-area: goals;
+  background-color: var(--color-white);
+  padding: var(--spacing);
+
+
+}

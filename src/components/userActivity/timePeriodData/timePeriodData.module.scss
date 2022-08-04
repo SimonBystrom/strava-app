@@ -1,0 +1,41 @@
+ .TimePeriodData {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+
+   div:nth-of-type(1) {
+     svg {
+       color: red;
+     }
+   }
+
+   div:nth-of-type(2) {
+     svg {
+       color: blue;
+     }
+   }
+
+   div:nth-of-type(3) {
+     svg {
+       color: green;
+     }
+   }
+
+   .DataContainer {
+     display: flex;
+     align-items: center;
+     gap: 4px;
+     width: 30%;
+
+     svg {
+       width: 24px;
+       height: 24px;
+     }
+
+     p {
+       margin: 0;
+       font-style: italic;
+       color: var(--color-accent-black);
+     }
+   }
+ }

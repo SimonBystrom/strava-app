@@ -1,0 +1,16 @@
+.CustomRangeContainer {
+  grid-area: customRange;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-lg);
+}
+
+
+.DateRangeRoot {
+// max-width: 75%;
+}
+
+.DatePickerContainer {
+  justify-self: center;
+  width: 67%
+}
