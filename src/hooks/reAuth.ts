@@ -1,7 +1,9 @@
+import { useSession } from "next-auth/react"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { useUserStore } from "../stores/userStore"
-import { getAthlete, handleLogin, reAuthGetter } from "../utils/strava"
+import { getAthlete, getUserStats, handleLogin, reAuthGetter } from "../utils/strava"
+import { trpc } from "../utils/trpc"
 
 /**
  * Reauthenticates the current user if needed.
@@ -9,41 +11,48 @@ import { getAthlete, handleLogin, reAuthGetter } from "../utils/strava"
 export const useReAuth = () => {
   const { athlete, setAccessToken, setRefreshToken, setAthlete } = useUserStore()
   const router = useRouter()
+  const id = router.query.id as string
+  const { data: stravaData } = trpc.useQuery(['stravaData.getById', { id: id }], {
+    enabled: !!id
+  })
+  const {mutateAsync} = trpc.useMutation(['stravaData.edit'])
 
   useEffect(() => {
     const reAuthenticate = async () => {
-      // Get's the refresh token saved in LocalStorage.
-      const refreshToken = localStorage.getItem('StravaRefreshToken') as string
-      // If there's a refreshToken in Local storage we try to reAuthenticate using said refresh
-      // token.
-
-      // TODO: Check if Refresh Token is expired
-      if (refreshToken) {
+      if(stravaData) {
+        // Not expired
+        if(stravaData.expiresAt < new Date()) {
+          try {
+            const athlete = await getAthlete(stravaData.accessToken)
+            if(!athlete) {
+              console.info('No Athlete found for the current access_token...')
+              return
+            }
+            setAthlete(athlete)
+            return
+          } catch (err) {
+            console.error(err)
+          }
+        }
         try {
-          const tokens = await reAuthGetter(refreshToken)
-          // If there's no tokens we need a hard authentication (to get new Tokens)
+          const tokens = await reAuthGetter(stravaData.refreshToken)
           if (!tokens) {
             console.info('No Tokens found on re-authentication attempt.')
-            return handleLogin
+            return
           }
-          setAccessToken(tokens.access_token)
-          setRefreshToken(tokens.refresh_token)
-
-          const athlete = await getAthlete(tokens.access_token)
-
-          if (!athlete) {
-            console.info('No Athlete found for the current access_token...')
-            return handleLogin
-          }
-          setAthlete(athlete)
-
+          const {refreshToken, accessToken, expiresAt} = tokens
+          await mutateAsync({
+            id: stravaData.id,
+            refreshToken,
+            accessToken,
+            expiresAt: new Date(expiresAt * 1000)
+          })
+          return
         } catch (err) {
           console.error(err)
         }
-      } else {
-        console.info('No Refresh Token in local storage and no current client in Zustand store')
-        return handleLogin
       }
+      return console.info('No Strava Data in DB')
     }
     // If there's currently no athlete.id that means that the Zustand store has
     // lost it's athlete data (could be due to refreshed window or something else).

@@ -1,6 +1,4 @@
 import axios, { AxiosResponse } from "axios"
-import { useEffect } from "react"
-import { useQuery } from "react-query"
 import { Activity, useUserActivitiesStore } from "../stores/userActivitiesStore"
 import { BaseStats } from "../stores/userStatsStore"
 import { Athlete, useUserStore } from "../stores/userStore"
@@ -10,8 +8,8 @@ import { convertToHourMinSec } from "./timeConverter"
 /**
  * Handles the OAuth login redirect to Strava
  */
-export const handleLogin = () => {
-  const redirectUrl = 'http://localhost:3000/redirect'
+export const handleLogin = (id: string) => {
+  const redirectUrl = `http://localhost:3000/redirect/${id}/`
   const scope = 'read,activity:read_all'
 
   // Workaround to get rid of type issue with window.location not being allowed a string https://github.com/microsoft/TypeScript/issues/48949
@@ -24,6 +22,7 @@ export const handleLogin = () => {
  * Handles First Time Authentication & Expired Refresh Token Authentication
  */
 export const authGetter = async (authToken: string) => {
+  // TODO: Temp solution. Change to use the server.mjs in the future
   const clientId = process.env.NEXT_PUBLIC_STRAVA_CLIENT_ID
   const clientSecret = process.env.NEXT_PUBLIC_STRAVA_CLIENT_SECRET
   try {
@@ -40,8 +39,9 @@ export const authGetter = async (authToken: string) => {
 }
 
 type AuthResponse = {
-  access_token: string,
-  refresh_token: string,
+  accessToken: string,
+  refreshToken: string,
+  expiresAt: number,
 }
 
 /**
@@ -63,8 +63,9 @@ export const reAuthGetter = async (refreshToken: string) => {
   }
 
   const tokens: AuthResponse = {
-    access_token: response.data.access_token,
-    refresh_token: response.data.refresh_token,
+    accessToken: response.data.access_token,
+    refreshToken: response.data.refresh_token,
+    expiresAt: response.data.expires_at
   }
   return tokens
 }
