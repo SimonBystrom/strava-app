@@ -19,7 +19,7 @@ const Home: NextPage = () => {
   });
 
   const onSubmit = useCallback(async (data: ILogin) => {
-    await signIn("credentials", { ...data, callbackUrl: "/user" });
+    await signIn("credentials", { ...data, callbackUrl: "/" });
   }, []);
 
   if(!session) {

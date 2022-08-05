@@ -4,8 +4,8 @@ interface Page {
 }
 
 export const allPages: Page[] = [
-  { href: '/user', label: 'Home' },
-  { href: '/user/activity', label: 'Activity' },
+  { href: '/dashboard/user', label: 'Home' },
+  { href: '/dashboard/activity', label: 'Activity' },
   { href: '/', label: 'Back to First page'}
 ]
 

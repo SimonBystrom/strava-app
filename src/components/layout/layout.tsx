@@ -28,7 +28,7 @@ const Layout: FC<LayoutProps> = ({children, activePage}) => {
         {
           allPages.map((page, idx) => {
             const linkStyles = classnames(classes.Link, {
-              [classes.Active]: page.label === activePage
+              [classes.Active as string]: page.label === activePage
             })
             return (
               <Link key={idx} href={page.href}>

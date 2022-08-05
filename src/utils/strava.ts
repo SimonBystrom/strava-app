@@ -3,6 +3,7 @@ import { Activity, useUserActivitiesStore } from "../stores/userActivitiesStore"
 import { BaseStats } from "../stores/userStatsStore"
 import { Athlete, useUserStore } from "../stores/userStore"
 import { convertToHourMinSec } from "./timeConverter"
+import { trpc } from "./trpc"
 // import { env } from "../env/server.mjs";
 
 /**
@@ -73,27 +74,30 @@ export const reAuthGetter = async (refreshToken: string) => {
 /**
  * Handles fetching of user stats. Used by the useUserStats hook.
  */
-export const getUserStats = async (userID: Athlete['id'], accessToken: string) => {
+export const getUserStats = async (athleteID: Athlete['id'], accessToken: string) => {
+  // const { data: stravaData } = trpc.useQuery(['stravaData.getById', { id: userId }])
   let response: AxiosResponse
-  try {
-    response = await axios.get(
-      `https://www.strava.com/api/v3/athletes/${userID}/stats`,
-      { headers: { Authorization: `Bearer ${accessToken}` } }
-    )
-  } catch (error) {
-    console.log(error)
-    return
-  }
+  // console.log('get USER START', stravaData?.accessToken)
+  // if(stravaData) {
+    try {
+      response = await axios.get(
+        `https://www.strava.com/api/v3/athletes/${athleteID}/stats`,
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      )
+    } catch (error) {
+      console.log(error)
+      return
+    }
+    const parsedResponse: BaseStats = {
+      count: response.data.all_run_totals.count,
+      distance: response.data.all_run_totals.distance,
+      elapsedTime: convertToHourMinSec(response.data.all_run_totals.elapsed_time),
+      elevationGain: response.data.all_run_totals.elevation_gain,
+      movingTime: convertToHourMinSec(response.data.all_run_totals.moving_time)
+    }
 
-  const parsedResponse: BaseStats = {
-    count: response.data.all_run_totals.count,
-    distance: response.data.all_run_totals.distance,
-    elapsedTime: convertToHourMinSec(response.data.all_run_totals.elapsed_time),
-    elevationGain: response.data.all_run_totals.elevation_gain,
-    movingTime: convertToHourMinSec(response.data.all_run_totals.moving_time)
-  }
-
-  return parsedResponse
+    return parsedResponse
+  // }
 }
 
 /**

@@ -9,25 +9,22 @@ import { useReAuth } from "./reAuth"
 /**
  * Gives the Stats for the currently authenticated user
  */
-export const useStats = async () => {
-  const { athlete } = useUserStore()
-  const router = useRouter()
-  const id = router.query.id as string
-  const {data: stravaData} = await trpc.useQuery(['stravaData.getById', {id: id}], {
-    enabled: !!id
-  })
-  console.log('id', id)
-  console.log('strava', stravaData)
+export const useStats = () => {
+  const { athlete, accessToken } = useUserStore()
 
   // Runs the useReAuth to check if re-authentication is neccessary.
-  await useReAuth()
-  return useQuery(
-    ['userStats', athlete?.id, stravaData!.accessToken],
-    () => getUserStats(athlete?.id, stravaData!.accessToken),
+  useReAuth()
+  const {data, isLoading} = useQuery(
+    ['userStats', athlete?.id, athlete.id],
+    () => getUserStats(athlete?.id, accessToken),
     {
-      enabled: !!athlete?.id && !!stravaData,
+      enabled: !!athlete?.id,
       // 5 min cached results
       staleTime: 300000,
     }
   )
+  return {
+    data,
+    isLoading,
+  }
 }
