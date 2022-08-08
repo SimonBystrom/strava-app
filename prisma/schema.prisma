@@ -23,11 +23,21 @@ model Athlete {
 
 
 model User {
-    id            String  @id @default(auto()) @map("_id") @db.ObjectId
-    username      String?
-    email         String   @unique
-    password      String
-    image         String?
+  id            String  @id @default(auto()) @map("_id") @db.ObjectId
+  username      String?
+  email         String   @unique
+  password      String
+  image         String?
+  stravaData    StravaData?
+}
+
+model StravaData {
+  id            String  @id @default(auto()) @map("_id") @db.ObjectId
+  refreshToken  String
+  accessToken   String
+  expiresAt     DateTime
+  user          User @relation(fields: [userId], references: [id])
+  userId String @unique @db.ObjectId
 }
 
 model VerificationToken {

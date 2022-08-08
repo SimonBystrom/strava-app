@@ -1,5 +1,6 @@
 import { NextPage } from "next";
-import Layout from "../../components/layout/layout";
+// import Layout from "../../components/layout/layout";
+import Layout from '../../components/layout/layout'
 import UserActivity from "../../components/userActivity/userActivity";
 import { useActivities } from "../../hooks/userActivities";
 

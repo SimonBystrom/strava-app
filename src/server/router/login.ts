@@ -30,7 +30,10 @@ export const loginRouter = createRouter()
       return {
         status: 201,
         message: "Account created successfully",
-        result: result.email,
+        result: {
+          email: result.email,
+          id: result.id
+        }
       };
     },
   });

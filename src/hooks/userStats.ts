@@ -1,6 +1,9 @@
+import { useSession } from "next-auth/react"
+import { useRouter } from "next/router"
 import { useQuery } from "react-query"
 import { useUserStore } from "../stores/userStore"
 import { getUserStats } from "../utils/strava"
+import { trpc } from "../utils/trpc"
 import { useReAuth } from "./reAuth"
 
 /**
@@ -11,13 +14,17 @@ export const useStats = () => {
 
   // Runs the useReAuth to check if re-authentication is neccessary.
   useReAuth()
-  return useQuery(
-    ['userStats', athlete?.id, accessToken],
+  const {data, isLoading} = useQuery(
+    ['userStats', athlete?.id, athlete.id],
     () => getUserStats(athlete?.id, accessToken),
     {
-      enabled: !!athlete?.id && !!accessToken,
+      enabled: !!athlete?.id,
       // 5 min cached results
       staleTime: 300000,
     }
   )
+  return {
+    data,
+    isLoading,
+  }
 }
