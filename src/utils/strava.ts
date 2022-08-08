@@ -11,7 +11,8 @@ import { trpc } from "./trpc"
  */
 export const handleLogin = () => {
   // const redirectUrl = process.env.NEXT_PUBLIC_VERCEL_URL ? `${process.env.NEXT_PUBLIC_VERCEL_URL}/redirect` : 'http://localhost:3000/redirect'
-  const redirectUrl = `http${window.location.hostname === 'localhost' ? '' : 's'}://${window.location.host}/redirect`
+  const secureConnection = window.location.hostname !== 'localhost'
+  const redirectUrl = `http${secureConnection ? 's' : ''}://${window.location.host}/redirect`
   const scope = 'read,activity:read_all'
 
   console.log('redirect URL -->', redirectUrl)
