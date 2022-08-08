@@ -10,7 +10,7 @@ import { trpc } from "./trpc"
  * Handles the OAuth login redirect to Strava
  */
 export const handleLogin = (id: string) => {
-  const redirectUrl = `http://localhost:3000/redirect/${id}/`
+  const redirectUrl = `http://localhost:3000/redirect/`
   const scope = 'read,activity:read_all'
 
   // Workaround to get rid of type issue with window.location not being allowed a string https://github.com/microsoft/TypeScript/issues/48949
