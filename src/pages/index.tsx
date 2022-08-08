@@ -68,7 +68,7 @@ const Home: NextPage = () => {
   // use the previous setup to quickly move between the tabs
   return (
     <div className={styles.container}>
-      <button onClick={() => handleLogin(session.id as string)}>Connect to strava</button>
+      <button onClick={() => handleLogin()}>Connect to strava</button>
       <p>{session?.user?.email}</p>
     </div>
   )

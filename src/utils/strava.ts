@@ -1,5 +1,4 @@
 import axios, { AxiosResponse } from "axios"
-import { getBaseUrl } from "../pages/_app"
 import { Activity, useUserActivitiesStore } from "../stores/userActivitiesStore"
 import { BaseStats } from "../stores/userStatsStore"
 import { Athlete, useUserStore } from "../stores/userStore"
@@ -10,9 +9,11 @@ import { trpc } from "./trpc"
 /**
  * Handles the OAuth login redirect to Strava
  */
-export const handleLogin = (id: string) => {
-  const redirectUrl = `${getBaseUrl()}/redirect`
+export const handleLogin = () => {
+  const redirectUrl = process.env.NEXT_PUBLIC_VERCEL_URL ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/redirect` : 'http://localhost:3000/redirect'
   const scope = 'read,activity:read_all'
+
+  console.log('redirect URL -->', redirectUrl)
 
   // Workaround to get rid of type issue with window.location not being allowed a string https://github.com/microsoft/TypeScript/issues/48949
   const win: Window = window
