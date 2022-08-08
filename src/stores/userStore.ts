@@ -24,25 +24,13 @@ export const emptyAthlete: Athlete = {
 }
 
 type UserStoreProps = {
-  accessToken: string,
-  refreshToken: string,
-  expiresAt: number,
   athlete: Athlete,
-  setAccessToken: (accessToken: string) => void,
-  setRefreshToken: (refreshToken: string) => void,
-  setExpiresAt: (expiresAt: number) => void,
   setAthlete: (athlete: Athlete) => void,
 }
 
 export const useUserStore = create<UserStoreProps>(
   (set => ({
-    accessToken: '',
-    refreshToken: '',
-    expiresAt: 0,
     athlete: emptyAthlete,
-    setAccessToken: accessToken => set({ accessToken}),
-    setRefreshToken: refreshToken => set({ refreshToken}),
-    setExpiresAt: expiresAt => set({ expiresAt }),
     setAthlete: athlete => set({ athlete }),
   }))
 )
