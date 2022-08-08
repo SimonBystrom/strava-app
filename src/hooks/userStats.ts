@@ -10,7 +10,7 @@ import { useReAuth } from "./reAuth"
 /**
  * Gives the Stats for the currently authenticated user
  */
-export const useStats = () => {
+export const useAthleteStats = () => {
   const { athlete } = useUserStore()
   const [accessToken, setAccessToken] = useState<string>('')
 

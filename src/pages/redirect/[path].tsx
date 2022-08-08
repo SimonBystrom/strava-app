@@ -15,7 +15,20 @@ const Redirect: NextPage = () => {
   const {setAthlete} = useUserStore()
   const {mutateAsync} = trpc.useMutation(['stravaData.create'])
 
+
+
   useEffect(() => {
+    const asyncLocalStorage = {
+      setItem: async function (key: string, value: string) {
+        await null;
+        return localStorage.setItem(key, value);
+      },
+      getItem: async function (key: string) {
+        await null;
+        return localStorage.getItem(key);
+      }
+    }
+
     const authenticate = async (query: ParsedUrlQuery) => {
       const stravaAuthToken = query.code as string
       // All neccessary tokens from the strava res
@@ -26,7 +39,7 @@ const Redirect: NextPage = () => {
         refreshToken: tokens.refresh_token,
         expiresAt: tokens.expires_at
       }
-      localStorage.setItem('strava', JSON.stringify(stravaTokens))
+      await asyncLocalStorage.setItem('strava', JSON.stringify(stravaTokens))
       // Save Athlete to store for easier fetch on tabs
       setAthlete(tokens.athlete)
     }
