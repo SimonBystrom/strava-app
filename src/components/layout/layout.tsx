@@ -10,9 +10,30 @@ import { Container } from '@mantine/core'
 interface LayoutProps {
   children: JSX.Element
   activePage: Pages
+  justHeader?: boolean
 }
 
-const Layout: FC<LayoutProps> = ({children, activePage}) => {
+const Layout: FC<LayoutProps> = ({
+  children,
+  activePage,
+  justHeader = false,
+ }) => {
+
+  if (justHeader) {
+    return (
+      <div className={classes.LayoutContainerNoSidebar}>
+        <Head>
+
+        </Head>
+        <div className={classes.Header}>
+          Header
+        </div>
+        <Container className={classes.Main} fluid={true}>
+          {children}
+        </Container>
+      </div>
+    )
+  }
   return(
     <div className={classes.LayoutContainer}>
       <Head>
