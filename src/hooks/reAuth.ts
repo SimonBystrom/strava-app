@@ -18,7 +18,7 @@ export const useReAuth = (tokens: StravaData) => {
 
   useEffect(() => {
     const reAuthenticate = async (tokens: StravaData) => {
-      const expired = new Date(tokens.expiresAt) > new Date()
+      const expired = new Date(tokens.expiresAt * 1000) < new Date()
       if (expired) {
         console.info('Access token expired -> Reatuh with refreshToken')
         try {
