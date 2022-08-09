@@ -1,3 +1,11 @@
+# Flow explanation
+Pages -> Responsible for checking session and passing down the userId to the component
+activityMain / userMain (strava-related-components) -> Responsible for getting tokens / Checking strava connection
+CheckStravaConnection -> Responsible for getting tokens from DB -> sending tokens down to the correct strava-related-app for strava API calls
+
+
+
+
 # Create T3 App
 
 This is an app bootstrapped according to the [init.tips](https://init.tips) stack, also known as the T3-Stack.

@@ -1,7 +1,7 @@
 import { Loader} from '@mantine/core'
 import { FC } from 'react'
 import { StravaData } from '@prisma/client'
-import { useActivities } from '../../hooks/userActivities'
+import { useAthleteActivities } from '../../hooks/userActivities'
 import Activities from './userActivity/activities/activites'
 import { CheckStravaConnection } from '../checkStravaConnection/checkStravaConnection'
 import { useLocalStorageTokens } from '../../hooks/localStorageTokens'
@@ -12,7 +12,7 @@ interface UserActivityProps {
 }
 
 export const UserActivity: FC<UserActivityProps> = ({ tokens }) => {
-  const { isLoading, data: activities } = useActivities(tokens)
+  const { isLoading, data: activities } = useAthleteActivities(tokens)
 
   if(isLoading || !activities) {
     return (

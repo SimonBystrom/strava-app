@@ -8,7 +8,7 @@ import { useReAuth } from "./reAuth"
 /**
  * Gives the Activities for the currently authenticated user
  */
-export const useActivities = (tokens: StravaData) => {
+export const useAthleteActivities = (tokens: StravaData) => {
   // Runs the useReAuth to check if re-authentication is neccessary.
   useReAuth(tokens)
   return useQuery(
