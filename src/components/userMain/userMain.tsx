@@ -4,8 +4,7 @@ import { useAthleteStats } from '../../hooks/userStats';
 import { StravaData } from '@prisma/client';
 import { useLocalStorageTokens } from '../../hooks/localStorageTokens';
 import { CheckStravaConnection } from '../checkStravaConnection/checkStravaConnection';
-
-// export type Tokens = { accessToken: string, refreshToken: string, expiresAt: number, userId: string }
+import { Loader } from '@mantine/core';
 
 interface UserStatsProps {
   tokens: StravaData
@@ -17,7 +16,7 @@ export const UserStats: FC<UserStatsProps> = ({tokens}) => {
 
   return (
     <>
-      {isLoading && <p>Loading ...</p>}
+      {isLoading && <Loader size="xl" />}
       {!isLoading && userData &&
         <div>
           Welcome {`${athlete.firstname} ${athlete.lastname}`}

@@ -1,4 +1,4 @@
-import { Select, Tabs } from '@mantine/core'
+import { Loader, Select, Tabs } from '@mantine/core'
 import { Calendar } from '@mantine/dates'
 import dayjs from 'dayjs'
 import { FC, useState } from 'react'
@@ -127,7 +127,7 @@ export const UserActivity: FC<UserActivityProps> = ({ tokens }) => {
 
   if(isLoading || !activities) {
     return (
-      <p>Loading ...</p>
+      <Loader size="xl" />
     )
   }
   return (

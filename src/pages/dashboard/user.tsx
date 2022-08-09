@@ -1,3 +1,4 @@
+import { Loader } from "@mantine/core";
 import { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Layout from "../../components/layout/layout"
@@ -11,7 +12,7 @@ const User: NextPage = () => {
   if (!session) {
     return (
       <Layout activePage='Home'>
-        <p>Loading ... (session)</p>
+        <Loader size="xl" />
       </Layout>
     )
   }
