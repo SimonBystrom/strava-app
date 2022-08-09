@@ -14,10 +14,11 @@ export const UserStats: FC<UserStatsProps> = ({tokens}) => {
   const { data: userData, isLoading } = useAthleteStats(tokens)
   const { athlete } = useUserStore()
 
+  if(isLoading || !userData) {
+    return <Loader size="xl" />
+  }
   return (
     <>
-      {isLoading && <Loader size="xl" />}
-      {!isLoading && userData &&
         <div>
           Welcome {`${athlete.firstname} ${athlete.lastname}`}
           <p>Total Running time</p>
@@ -25,7 +26,6 @@ export const UserStats: FC<UserStatsProps> = ({tokens}) => {
           <p>Minutes: {userData.elapsedTime.minutes}</p>
           <p>Seconds: {userData.elapsedTime.seconds}</p>
        </div>
-      }
     </>
   )
 }

@@ -5,6 +5,7 @@ import { handleLogin } from '../../utils/strava'
 import { UserStats } from '../userMain/userMain'
 import { UserActivity } from '../userActivity/userActivity'
 import { trpc } from '../../utils/trpc'
+import { Loader } from '@mantine/core'
 
 interface CheckStravaConnectionProps {
   userId: string
@@ -42,7 +43,7 @@ export const CheckStravaConnection: FC<CheckStravaConnectionProps> = ({ userId, 
 
   if (isLoading) {
     return (
-      <p>Loading ... (is trying to fetch stravaData from db)</p>
+      <Loader size="xl" />
     )
   }
 
