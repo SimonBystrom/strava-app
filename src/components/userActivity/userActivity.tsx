@@ -9,6 +9,10 @@ import { useAllActivityDates } from '../../hooks/allActivityDates'
 import TimePeriodData from './timePeriodData/timePeriodData'
 import CustomTimeRangeData from './customTimeRangeData/customTimeRangeData'
 import MilestoneTabData from './milestonesData/milestones'
+import { useLocalStorageTokens } from '../../hooks/localStorageTokens'
+import { CheckStravaConnection } from '../userMain/userMain'
+import { StravaData } from '@prisma/client'
+import { useActivities } from '../../hooks/userActivities'
 
 interface MilestonesProps {
   activities: Activity[]
@@ -52,35 +56,34 @@ const Milestones: FC<MilestonesProps> = ({ activities, customPeriod}) => {
   )
 }
 
-interface UserActivityProps {
+interface ActivitiesProps {
   activities: Activity[]
 }
-
-const UserActivity: FC<UserActivityProps> = ({ activities }) => {
+const Activities: FC<ActivitiesProps> = ({activities}) => {
   const [customPeriod, setCustomPeriod] = useState<[Date | null, Date | null]>([null, null])
   const { month, year, all, custom } = useRunsByPeriod(activities, customPeriod)
   const allDates = useAllActivityDates(activities)
   const currentTime = new Date()
-  // TODO: Refactor the 'Activities' List into it's own component
+
   return (
     <div className={classes.ActivitesPageWrapper}>
       <div className={classes.ActivitiesContainer}>
-      <h2>ACTIVITIES</h2>
+        <h2>ACTIVITIES</h2>
         <div className={classes.ActivityGridWrapper}>
           <div className={classes.TimeLineDataContainer}>
-            <TimePeriodData label={dayjs(currentTime).format('MMMM')} period={month}/>
-            <TimePeriodData label={dayjs(currentTime).format('YYYY')} period={year}/>
-            <TimePeriodData label='All Time' period={all}/>
+            <TimePeriodData label={dayjs(currentTime).format('MMMM')} period={month} />
+            <TimePeriodData label={dayjs(currentTime).format('YYYY')} period={year} />
+            <TimePeriodData label='All Time' period={all} />
           </div>
           <div className={classes.Calendar}>
             <Calendar
-              onChange={() => {}}
+              onChange={() => { }}
               dayStyle={(date) => {
                 date.toISOString().slice(0, -1)
                 const dateMatch = allDates.some(activityDate => {
                   return (activityDate.getFullYear() === date.getFullYear()) && (activityDate.getMonth() === date.getMonth()) && (activityDate.getDate() === date.getDate())
                 })
-                if (dateMatch){
+                if (dateMatch) {
                   return {
                     backgroundColor: 'red',
                     borderRadius: '50%',
@@ -104,7 +107,7 @@ const UserActivity: FC<UserActivityProps> = ({ activities }) => {
       </div>
       <div className={classes.MilestonesContainer}>
         <h2>MILESTONES</h2>
-        <Milestones activities={activities} customPeriod={customPeriod}/>
+        <Milestones activities={activities} customPeriod={customPeriod} />
       </div>
       <div className={classes.GoalsContainer}>
         <h2>GOALS</h2>
@@ -114,4 +117,45 @@ const UserActivity: FC<UserActivityProps> = ({ activities }) => {
   )
 }
 
-export default UserActivity
+interface UserActivityProps {
+  // activities: Activity[]
+  tokens: StravaData
+}
+
+const UserActivity: FC<UserActivityProps> = ({ tokens }) => {
+  const { isLoading, data: activities } = useActivities(tokens)
+
+
+  if(isLoading || !activities) {
+    return (
+      <p>Loading ...</p>
+    )
+  }
+  // TODO: Refactor the 'Activities' List into it's own component
+  return (
+    <Activities activities={activities}/>
+  )
+}
+
+
+interface ActivityMainProps {
+  userId: string
+}
+
+const ActivityMain: FC<ActivityMainProps> = ({userId}) => {
+  const tokens = useLocalStorageTokens()
+
+  // If access token doesn't exit on local storage -> User hasn't logged in from this
+  // browser before or user hasn't linked Strava account with their account.
+  if (!tokens?.accessToken) {
+    return (
+      <CheckStravaConnection userId={userId} checkAgainst='userActivity' />
+    )
+  }
+
+  return (
+    <UserActivity tokens={tokens} />
+  )
+}
+
+export default ActivityMain

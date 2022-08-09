@@ -9,6 +9,7 @@ import { Session } from 'next-auth';
 import { trpc } from '../../utils/trpc';
 import { handleLogin } from '../../utils/strava';
 import { StravaData } from '@prisma/client';
+import { useLocalStorageTokens } from '../../hooks/localStorageTokens';
 
 // export type Tokens = { accessToken: string, refreshToken: string, expiresAt: number, userId: string }
 
@@ -38,9 +39,10 @@ const UserStats: FC<UserStatsProps> = ({tokens}) => {
 
 interface CheckStravaConnectionProps {
   userId: string
+  checkAgainst: 'userStats' | 'userActivity'
 }
 
-const CheckStravaConnection: FC<CheckStravaConnectionProps> = ({userId}) => {
+export const CheckStravaConnection: FC<CheckStravaConnectionProps> = ({ userId, checkAgainst }) => {
    const { data: stravaData, isLoading } = trpc.useQuery(['stravaData.getById', { id: userId }])
   const [tokens, setTokens] = useState<StravaData | null>(null)
 
@@ -84,9 +86,22 @@ const CheckStravaConnection: FC<CheckStravaConnectionProps> = ({userId}) => {
     )
   }
   // User has a connected Strava account
-  return (
-    <UserStats tokens={tokens}/>
-  )
+  switch (checkAgainst) {
+    case 'userStats':
+      return (
+        <UserStats tokens={tokens} />
+      )
+    case 'userActivity':
+      return (
+        <>...</>
+      )
+
+    default:
+      return (
+        <>...</>
+      )
+      break;
+  }
 }
 
 
@@ -95,36 +110,13 @@ interface UserMainProps {
 }
 
 const UserMain: FC<UserMainProps> = ({userId}) => {
-  const [tokens, setTokens] = useState<StravaData | null>(null)
-
-
-  useEffect(() => {
-    const asyncLocalStorage = {
-      setItem: async function (key: string, value: string) {
-        await null;
-        return localStorage.setItem(key, value);
-      },
-      getItem: async function (key: string) {
-        await null;
-        return localStorage.getItem(key);
-      }
-    }
-    const checkLocalStorage = async () => {
-      const localStorageObj = await asyncLocalStorage.getItem('strava')
-        if (localStorageObj) {
-          console.log('local Storage with tokens found in UserMain')
-          setTokens(JSON.parse(localStorageObj))
-        }
-    }
-
-    checkLocalStorage()
-  }, [])
+  const tokens = useLocalStorageTokens()
 
   // If access token doesn't exit on local storage -> User hasn't logged in from this
   // browser before or user hasn't linked Strava account with their account.
   if(!tokens?.accessToken) {
     return (
-      <CheckStravaConnection userId={userId}/>
+      <CheckStravaConnection userId={userId} checkAgainst='userStats'/>
     )
   }
 
