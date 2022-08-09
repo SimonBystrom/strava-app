@@ -9,9 +9,9 @@ import { trpc } from "./trpc"
 /**
  * Handles the OAuth login redirect to Strava
  */
-export const handleLogin = () => {
+export const handleLogin = (id: string) => {
   const secureConnection = window.location.hostname !== 'localhost'
-  const redirectUrl = `http${secureConnection ? 's' : ''}://${window.location.host}/redirect`
+  const redirectUrl = `http${secureConnection ? 's' : ''}://${window.location.host}/redirect/${id}`
   const scope = 'read,activity:read_all'
 
   // Workaround to get rid of type issue with window.location not being allowed a string https://github.com/microsoft/TypeScript/issues/48949
@@ -27,15 +27,25 @@ export const authGetter = async (authToken: string) => {
   // TODO: Temp solution. Change to use the server.mjs in the future
   const clientId = process.env.NEXT_PUBLIC_STRAVA_CLIENT_ID
   const clientSecret = process.env.NEXT_PUBLIC_STRAVA_CLIENT_SECRET
+
+  let response: AxiosResponse
   try {
-    const response = await axios.post(
+    response = await axios.post(
       `https://www.strava.com/oauth/token?client_id=${clientId}&client_secret=${clientSecret}&code=${authToken}&grant_type=authorization_code`
     )
     console.log('atuth athlete', response.data.athlete)
-    return response.data
   } catch (error) {
     console.log(error)
+    return
   }
+
+  const tokens: AuthResponse & {athlete: Athlete} = {
+    accessToken: response.data.access_token,
+    refreshToken: response.data.refresh_token,
+    expiresAt: response.data.expires_at,
+    athlete: {...response.data.athlete}
+  }
+  return tokens
 }
 
 type AuthResponse = {

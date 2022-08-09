@@ -1,4 +1,5 @@
 import { useEffect } from "react"
+import { Tokens } from "../components/userMain/userMain"
 import { useUserStore } from "../stores/userStore"
 import { getAthlete, reAuthGetter } from "../utils/strava"
 import { trpc } from "../utils/trpc"
@@ -6,7 +7,7 @@ import { trpc } from "../utils/trpc"
 /**
  * Reauthenticates the current user if needed.
  */
-export const useReAuth = () => {
+export const useReAuth = (tokens: Tokens) => {
   const {
     athlete,
     setAthlete
@@ -15,14 +16,10 @@ export const useReAuth = () => {
 
 
   useEffect(() => {
-    const reAuthenticate = async (tokens: {
-      accessToken: string,
-      refreshToken: string,
-      expiredAt: number,
-    }) => {
+    const reAuthenticate = async (tokens: Tokens) => {
       // TODO: Check if this expired token and the expired token logic takes the local time into
       // consideration and if it's even relevant.
-      const expired = new Date(tokens.expiredAt * 1000) > new Date()
+      const expired = new Date(tokens.expiresAt) > new Date()
       if (expired) {
         console.info('Access token expired -> Reatuh with refreshToken')
         try {
@@ -62,11 +59,12 @@ export const useReAuth = () => {
     // If that's the case we need to get the Athlete ID back again since mulitple
     // components depend on having Athlete Data.
     // To be able to get the Athlete ID we need to re-Authenticate.
-    if (!athlete?.id) {
-      console.log('No Athlete ID in store -> Reauth')
-      const localStorageObj = localStorage.getItem('strava')
-      const storedTokens = JSON.parse(localStorageObj!)
-      reAuthenticate(storedTokens)
+    if (!athlete?.id && tokens) {
+      console.log('REAUTH --> running reauthing', tokens)
+      // console.log('No Athlete ID in store -> Reauth')
+      // const localStorageObj = localStorage.getItem('strava')
+      // const storedTokens = JSON.parse(localStorageObj!)
+      reAuthenticate(tokens)
     }
-  }, [athlete?.id, setAthlete , mutateAsync])
+  }, [athlete?.id, setAthlete , mutateAsync, tokens])
 }

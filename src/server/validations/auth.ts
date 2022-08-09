@@ -12,7 +12,7 @@ export const signUpSchema = loginSchema.extend({
 export const stravaDataSchema = z.object({
   accessToken: z.string(),
   refreshToken: z.string(),
-  expiresAt: z.date(),
+  expiresAt: z.number(),
   userId: z.string(),
 })
 

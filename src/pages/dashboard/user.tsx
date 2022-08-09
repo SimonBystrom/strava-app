@@ -13,7 +13,7 @@ import { trpc } from "../../utils/trpc";
 
 
 const User: NextPage = () => {
-  const { athlete } = useUserStore()
+
   const { data: session } = useSession()
   // const [userData, setUserData] = useState<StravaData | null>(null
   // const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -21,9 +21,9 @@ const User: NextPage = () => {
   //   []
   // )
   // FIX THIS
-  const { data: userData, isLoading } = trpc.useQuery(['stravaData.getById', { id: session?.user?.id }], {
-    enabled: !!session?.user
-  })
+  // const { data: userData, isLoading } = trpc.useQuery(['stravaData.getById', { id: session?.user?.id }], {
+  //   enabled: !!session?.user
+  // })
 
   // useEffect(() => {
   //   if(session?.user) {
@@ -37,16 +37,22 @@ const User: NextPage = () => {
   // }, [session])
   // const {data: userStats, isLoading} = useAthleteStats()
 
+  if (!session) {
+    return (
+      <Layout activePage='Home'>
+        <p>Loading ... (session)</p>
+      </Layout>
+    )
+  }
+
   return (
     <Layout activePage='Home'>
       <>
-        {!userData && isLoading &&
-          <div>
-            <button onClick={() => handleLogin()}>Connect to strava</button>
-          </div>
-        }
-        <p>Connected!</p>
-        {/* {userStats && <UserMain athlete={athlete} runningsStats={userStats} />} */}
+        {/* {session &&
+
+        } */}
+        {/* <p>Connected!</p> */}
+        {session.id && <UserMain userId={session.id as string}/>}
         {/* {isLoading && <p>Loading ...</p>} */}
       </>
     </Layout>

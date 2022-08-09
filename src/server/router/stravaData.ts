@@ -42,7 +42,7 @@ export const stravaDataRouter = createRouter()
       id: z.string(),
       refreshToken: z.string(),
       accessToken: z.string(),
-      expiresAt: z.date()
+      expiresAt: z.number()
     }),
     resolve: async ({input: {id, refreshToken, accessToken, expiresAt}, ctx}) => {
       const stravaData = ctx.prisma.stravaData.update({
