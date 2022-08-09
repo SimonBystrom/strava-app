@@ -1,5 +1,6 @@
+import { StravaData } from "@prisma/client"
 import { useEffect } from "react"
-import { Tokens } from "../components/userMain/userMain"
+// import { Tokens } from "../components/userMain/userMain"
 import { useUserStore } from "../stores/userStore"
 import { getAthlete, reAuthGetter } from "../utils/strava"
 import { trpc } from "../utils/trpc"
@@ -7,7 +8,7 @@ import { trpc } from "../utils/trpc"
 /**
  * Reauthenticates the current user if needed.
  */
-export const useReAuth = (tokens: Tokens) => {
+export const useReAuth = (tokens: StravaData) => {
   const {
     athlete,
     setAthlete
@@ -16,7 +17,7 @@ export const useReAuth = (tokens: Tokens) => {
 
 
   useEffect(() => {
-    const reAuthenticate = async (tokens: Tokens) => {
+    const reAuthenticate = async (tokens: StravaData) => {
       // TODO: Check if this expired token and the expired token logic takes the local time into
       // consideration and if it's even relevant.
       const expired = new Date(tokens.expiresAt) > new Date()
@@ -30,6 +31,9 @@ export const useReAuth = (tokens: Tokens) => {
             expiresAt: newTokens!.expiresAt
           }
           localStorage.setItem('strava', JSON.stringify(stravaTokens))
+          await mutateAsync({
+            ...tokens
+          })
 
           const athlete = await getAthlete(stravaTokens.accessToken)
           if (!athlete) {

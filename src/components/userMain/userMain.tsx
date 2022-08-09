@@ -10,10 +10,10 @@ import { trpc } from '../../utils/trpc';
 import { handleLogin } from '../../utils/strava';
 import { StravaData } from '@prisma/client';
 
-export type Tokens = { accessToken: string, refreshToken: string, expiresAt: number }
+// export type Tokens = { accessToken: string, refreshToken: string, expiresAt: number, userId: string }
 
 interface UserStatsProps {
-  tokens: Tokens
+  tokens: StravaData
 }
 
 const UserStats: FC<UserStatsProps> = ({tokens}) => {
@@ -42,7 +42,7 @@ interface CheckStravaConnectionProps {
 
 const CheckStravaConnection: FC<CheckStravaConnectionProps> = ({userId}) => {
    const { data: stravaData, isLoading } = trpc.useQuery(['stravaData.getById', { id: userId }])
-  const [tokens, setTokens] = useState<Tokens | null>(null)
+  const [tokens, setTokens] = useState<StravaData | null>(null)
 
    useEffect(() => {
     const asyncLocalStorage = {
@@ -62,7 +62,7 @@ const CheckStravaConnection: FC<CheckStravaConnectionProps> = ({userId}) => {
          expiresAt: stravaData.expiresAt
        }
         await asyncLocalStorage.setItem('strava', JSON.stringify(stravaTokens))
-        setTokens(stravaTokens)
+        setTokens(stravaData)
      }
     if(stravaData && !isLoading) {
       setLocalStorage(stravaData)
@@ -95,7 +95,7 @@ interface UserMainProps {
 }
 
 const UserMain: FC<UserMainProps> = ({userId}) => {
-  const [tokens, setTokens] = useState<Tokens | null>(null)
+  const [tokens, setTokens] = useState<StravaData | null>(null)
 
 
   useEffect(() => {
