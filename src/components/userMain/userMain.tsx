@@ -18,15 +18,13 @@ export const UserStats: FC<UserStatsProps> = ({tokens}) => {
     return <Loader size="xl" />
   }
   return (
-    <>
-        <div>
-          Welcome {`${athlete.firstname} ${athlete.lastname}`}
-          <p>Total Running time</p>
-          <p>Hours: {userData.elapsedTime.hours}</p>
-          <p>Minutes: {userData.elapsedTime.minutes}</p>
-          <p>Seconds: {userData.elapsedTime.seconds}</p>
-       </div>
-    </>
+    <div>
+      Welcome {`${athlete.firstname} ${athlete.lastname}`}
+      <p>Total Running time</p>
+      <p>Hours: {userData.elapsedTime.hours}</p>
+      <p>Minutes: {userData.elapsedTime.minutes}</p>
+      <p>Seconds: {userData.elapsedTime.seconds}</p>
+    </div>
   )
 }
 
@@ -41,9 +39,7 @@ const UserMain: FC<UserMainProps> = ({userId}) => {
   // If access token doesn't exit on local storage -> User hasn't logged in from this
   // browser before or user hasn't linked Strava account with their account.
   if(!tokens?.accessToken) {
-    return (
-      <CheckStravaConnection userId={userId} checkAgainst='userStats'/>
-    )
+    return <CheckStravaConnection userId={userId} checkAgainst='userStats'/>
   }
 
   // At this point an access Token should always exist -> Needs to render component

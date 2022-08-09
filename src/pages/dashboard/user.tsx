@@ -8,7 +8,6 @@ import UserMain from "../../components/userMain/userMain";
 const User: NextPage = () => {
   const { data: session } = useSession()
 
-
   if (!session) {
     return (
       <Layout activePage='Home'>

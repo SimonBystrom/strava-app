@@ -3,13 +3,16 @@ import { StravaData } from "@prisma/client"
 import { useEffect, useState } from "react"
 import { handleLogin } from '../../utils/strava'
 import { UserStats } from '../userMain/userMain'
-import { UserActivity } from '../userActivity/userActivity'
 import { trpc } from '../../utils/trpc'
 import { Loader } from '@mantine/core'
+import { asyncLocalStorage } from '../../utils/asyncLocalStorage'
+import { UserActivity } from '../activityMain/activityMain'
+
+type StravaReliantComponents = 'userStats' | 'userActivity'
 
 interface CheckStravaConnectionProps {
   userId: string
-  checkAgainst: 'userStats' | 'userActivity'
+  checkAgainst: StravaReliantComponents
 }
 
 export const CheckStravaConnection: FC<CheckStravaConnectionProps> = ({ userId, checkAgainst }) => {
@@ -17,16 +20,6 @@ export const CheckStravaConnection: FC<CheckStravaConnectionProps> = ({ userId, 
   const [tokens, setTokens] = useState<StravaData | null>(null)
 
   useEffect(() => {
-    const asyncLocalStorage = {
-      setItem: async function (key: string, value: string) {
-        await null;
-        return localStorage.setItem(key, value);
-      },
-      getItem: async function (key: string) {
-        await null;
-        return localStorage.getItem(key);
-      }
-    }
     const setLocalStorage = async (stravaData: StravaData) => {
       const stravaTokens = {
         accessToken: stravaData.accessToken,
@@ -48,6 +41,7 @@ export const CheckStravaConnection: FC<CheckStravaConnectionProps> = ({ userId, 
   }
 
   // If no strava data was found -> User doesn't have connected Strava account
+  // TODO: Separate into own component / Make it look good!
   if (!stravaData || !tokens) {
     return (
       <div>
@@ -55,7 +49,8 @@ export const CheckStravaConnection: FC<CheckStravaConnectionProps> = ({ userId, 
       </div>
     )
   }
-  // User has a connected Strava account
+  // User has a connected Strava account -> Render correct StravaRelated components based on where
+  // this component is being rendered
   switch (checkAgainst) {
     case 'userStats':
       return (

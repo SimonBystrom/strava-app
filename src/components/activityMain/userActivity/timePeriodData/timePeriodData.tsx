@@ -1,7 +1,7 @@
 import {FC} from 'react'
 import { BiHash, BiRun, BiTimeFive } from 'react-icons/bi'
-import { RunningData } from '../../../hooks/runsByPeriod'
-import { convertToKm } from '../../../utils/distanceConverter'
+import { RunningData } from '../../../../hooks/runsByPeriod'
+import { convertToKm } from '../../../../utils/distanceConverter'
 import classes from './timePeriodData.module.scss'
 
 interface TimePeriodDataProps {
