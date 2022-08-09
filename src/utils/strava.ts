@@ -59,7 +59,7 @@ type AuthResponse = {
  */
 export const reAuthGetter = async (refreshToken: string) => {
   const clientId = process.env.NEXT_PUBLIC_STRAVA_CLIENT_ID
-  const clientSecret = process.env.NEXT_PUBLIC_STRAVA_SECRET
+  const clientSecret = process.env.NEXT_PUBLIC_STRAVA_CLIENT_SECRET
 
   let response: AxiosResponse
 
