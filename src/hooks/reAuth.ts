@@ -28,18 +28,18 @@ export const useReAuth = (tokens: StravaData) => {
             refreshToken: newTokens!.refreshToken,
             expiresAt: newTokens!.expiresAt
           }
-          localStorage.setItem('strava', JSON.stringify(stravaTokens))
+          localStorage.setItem('strava', JSON.stringify(newTokens))
           // TODO: Check if this actually updates DB properly
           await mutateAsync({
             ...stravaTokens,
             id: tokens.id
           })
 
-          const athlete = await getAthlete(stravaTokens.accessToken)
-          if (!athlete) {
+          // const athlete = await getAthlete(newTokens.accessToken)
+          if (!newTokens?.athlete) {
             throw new Error('No Athlete found for current accessToken in local storage. Non-expired token.')
           }
-          setAthlete(athlete)
+          setAthlete(newTokens?.athlete)
           return
         } catch (err) {
           console.error(err)

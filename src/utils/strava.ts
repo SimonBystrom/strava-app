@@ -72,10 +72,11 @@ export const reAuthGetter = async (refreshToken: string) => {
     return
   }
 
-  const tokens: AuthResponse = {
+  const tokens: AuthResponse & { athlete: Athlete } = {
     accessToken: response.data.access_token,
     refreshToken: response.data.refresh_token,
-    expiresAt: response.data.expires_at
+    expiresAt: response.data.expires_at,
+    athlete: {...response.data.athlete}
   }
   return tokens
 }
