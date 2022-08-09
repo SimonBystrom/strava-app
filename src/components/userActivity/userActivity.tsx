@@ -10,9 +10,9 @@ import TimePeriodData from './timePeriodData/timePeriodData'
 import CustomTimeRangeData from './customTimeRangeData/customTimeRangeData'
 import MilestoneTabData from './milestonesData/milestones'
 import { useLocalStorageTokens } from '../../hooks/localStorageTokens'
-import { CheckStravaConnection } from '../userMain/userMain'
 import { StravaData } from '@prisma/client'
 import { useActivities } from '../../hooks/userActivities'
+import { CheckStravaConnection } from '../checkStravaConnection/checkStravaConnection'
 
 interface MilestonesProps {
   activities: Activity[]
@@ -118,11 +118,10 @@ const Activities: FC<ActivitiesProps> = ({activities}) => {
 }
 
 interface UserActivityProps {
-  // activities: Activity[]
   tokens: StravaData
 }
 
-const UserActivity: FC<UserActivityProps> = ({ tokens }) => {
+export const UserActivity: FC<UserActivityProps> = ({ tokens }) => {
   const { isLoading, data: activities } = useActivities(tokens)
 
 
@@ -131,7 +130,6 @@ const UserActivity: FC<UserActivityProps> = ({ tokens }) => {
       <p>Loading ...</p>
     )
   }
-  // TODO: Refactor the 'Activities' List into it's own component
   return (
     <Activities activities={activities}/>
   )
