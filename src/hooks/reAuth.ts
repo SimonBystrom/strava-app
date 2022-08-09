@@ -18,8 +18,6 @@ export const useReAuth = (tokens: StravaData) => {
 
   useEffect(() => {
     const reAuthenticate = async (tokens: StravaData) => {
-      // TODO: Check if this expired token and the expired token logic takes the local time into
-      // consideration and if it's even relevant.
       const expired = new Date(tokens.expiresAt) > new Date()
       if (expired) {
         console.info('Access token expired -> Reatuh with refreshToken')
@@ -31,6 +29,7 @@ export const useReAuth = (tokens: StravaData) => {
             expiresAt: newTokens!.expiresAt
           }
           localStorage.setItem('strava', JSON.stringify(stravaTokens))
+          // TODO: Check if this actually updates DB properly
           await mutateAsync({
             ...tokens
           })
