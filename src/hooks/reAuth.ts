@@ -31,7 +31,8 @@ export const useReAuth = (tokens: StravaData) => {
           localStorage.setItem('strava', JSON.stringify(stravaTokens))
           // TODO: Check if this actually updates DB properly
           await mutateAsync({
-            ...tokens
+            ...stravaTokens,
+            id: tokens.id
           })
 
           const athlete = await getAthlete(stravaTokens.accessToken)
