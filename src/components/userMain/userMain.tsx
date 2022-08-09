@@ -1,26 +1,55 @@
-import Link from 'next/link'
 import { FC } from 'react'
-import { BaseStats } from '../../stores/userStatsStore'
-import { Athlete } from '../../stores/userStore'
-import classNames from 'classnames';
-import classes from './userMain.module.scss'
+import { useUserStore } from '../../stores/userStore'
+import { useAthleteStats } from '../../hooks/userStats';
+import { StravaData } from '@prisma/client';
+import { useLocalStorageTokens } from '../../hooks/localStorageTokens';
+import { CheckStravaConnection } from '../checkStravaConnection/checkStravaConnection';
+import { Loader } from '@mantine/core';
+
+interface UserStatsProps {
+  tokens: StravaData
+}
+
+export const UserStats: FC<UserStatsProps> = ({tokens}) => {
+  const { data: userData, isLoading } = useAthleteStats(tokens)
+  const { athlete } = useUserStore()
+
+  if(isLoading || !userData) {
+    return <Loader size="xl" />
+  }
+  return (
+    <>
+        <div>
+          Welcome {`${athlete.firstname} ${athlete.lastname}`}
+          <p>Total Running time</p>
+          <p>Hours: {userData.elapsedTime.hours}</p>
+          <p>Minutes: {userData.elapsedTime.minutes}</p>
+          <p>Seconds: {userData.elapsedTime.seconds}</p>
+       </div>
+    </>
+  )
+}
 
 
 interface UserMainProps {
-  athlete: Athlete,
-  runningsStats: BaseStats
+  userId: string
 }
 
-const UserMain: FC<UserMainProps> = ({ athlete, runningsStats }) => {
+const UserMain: FC<UserMainProps> = ({userId}) => {
+  const tokens = useLocalStorageTokens()
 
+  // If access token doesn't exit on local storage -> User hasn't logged in from this
+  // browser before or user hasn't linked Strava account with their account.
+  if(!tokens?.accessToken) {
+    return (
+      <CheckStravaConnection userId={userId} checkAgainst='userStats'/>
+    )
+  }
+
+  // At this point an access Token should always exist -> Needs to render component
+  // that checks if we need to re auth or now.
   return (
-    <div>
-      Welcome {`${athlete.firstname} ${athlete.lastname}`}
-      <p>Total Running time</p>
-      <p>Hours: {runningsStats.elapsedTime.hours}</p>
-      <p>Minutes: {runningsStats.elapsedTime.minutes}</p>
-      <p>Seconds: {runningsStats.elapsedTime.seconds}</p>
-    </div>
+    <UserStats tokens={tokens}/>
   )
 }
 

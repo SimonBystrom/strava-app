@@ -35,7 +35,7 @@ model StravaData {
   id            String  @id @default(auto()) @map("_id") @db.ObjectId
   refreshToken  String
   accessToken   String
-  expiresAt     DateTime
+  expiresAt     Int
   user          User @relation(fields: [userId], references: [id])
   userId String @unique @db.ObjectId
 }
