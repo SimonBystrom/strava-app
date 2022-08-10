@@ -43,8 +43,9 @@ export const useReAuth = (tokens: StravaData) => {
           return
         } catch (err) {
           console.error(err)
+          return
         }
-
+        return
       }
       try {
         console.log('Current accessToken not expired -> Getting Athlete')
@@ -56,7 +57,9 @@ export const useReAuth = (tokens: StravaData) => {
         return
       } catch (err) {
         console.error(err)
+        return
       }
+      return
     }
     // If there's currently no athlete.id that means that the Zustand store has
     // lost it's athlete data (could be due to refreshed window or something else).
