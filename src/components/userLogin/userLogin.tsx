@@ -16,7 +16,7 @@ const UserLogin: React.FC = () => {
   });
 
   const onLogin = useCallback(async (data: ILogin) => {
-    await signIn("credentials", { ...data, callbackUrl: "/" });
+    await signIn("credentials", { ...data, callbackUrl: "/dashboard/user" });
   }, []);
 
   return (
