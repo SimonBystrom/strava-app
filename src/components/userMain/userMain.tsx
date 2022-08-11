@@ -7,11 +7,12 @@ import { CheckStravaConnection } from '../checkStravaConnection/checkStravaConne
 import { Loader } from '@mantine/core';
 
 interface UserStatsProps {
-  tokens: StravaData
+  tokens: StravaData,
+  userId: string,
 }
 
-export const UserStats: FC<UserStatsProps> = ({tokens}) => {
-  const { data: userData, isLoading } = useAthleteStats(tokens)
+export const UserStats: FC<UserStatsProps> = ({tokens, userId}) => {
+  const { data: userData, isLoading, error } = useAthleteStats(tokens, userId)
   const { athlete } = useUserStore()
 
   if(isLoading || !userData) {
@@ -45,7 +46,7 @@ const UserMain: FC<UserMainProps> = ({userId}) => {
   // At this point an access Token should always exist -> Needs to render component
   // that checks if we need to re auth or now.
   return (
-    <UserStats tokens={tokens}/>
+    <UserStats tokens={tokens} userId={userId}/>
   )
 }
 

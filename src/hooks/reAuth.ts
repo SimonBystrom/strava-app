@@ -8,7 +8,7 @@ import { trpc } from "../utils/trpc"
 /**
  * Reauthenticates the current user if needed.
  */
-export const useReAuth = (tokens: StravaData) => {
+export const useReAuth = (tokens: StravaData, userId: string) => {
   const {
     athlete,
     setAthlete
@@ -17,8 +17,10 @@ export const useReAuth = (tokens: StravaData) => {
 
 
   useEffect(() => {
-    const reAuthenticate = async (tokens: StravaData) => {
+    const reAuthenticate = async (tokens: StravaData, userId: string) => {
       const expired = new Date(tokens.expiresAt * 1000) < new Date()
+
+      // console.log('Running expired check with these params -> ', )
       if (expired) {
         console.info('Access token expired -> Reatuh with refreshToken')
         try {
@@ -26,40 +28,41 @@ export const useReAuth = (tokens: StravaData) => {
           const stravaTokens = {
             accessToken: newTokens!.accessToken,
             refreshToken: newTokens!.refreshToken,
-            expiresAt: newTokens!.expiresAt
+            expiresAt: newTokens!.expiresAt,
+            athlete: newTokens!.athlete,
           }
           localStorage.setItem('strava', JSON.stringify(newTokens))
           // TODO: Check if this actually updates DB properly
           await mutateAsync({
             ...stravaTokens,
-            id: tokens.id
+            userId: userId
           })
 
-          // const athlete = await getAthlete(newTokens.accessToken)
-          if (!newTokens?.athlete) {
+          const athlete = await getAthlete(stravaTokens.accessToken)
+          if (!athlete) {
             throw new Error('No Athlete found for current accessToken in local storage. Non-expired token.')
           }
-          setAthlete(newTokens?.athlete)
+          setAthlete(athlete)
           return
         } catch (err) {
           console.error(err)
           return
         }
-        return
       }
-      try {
-        console.log('Current accessToken not expired -> Getting Athlete')
-        const athlete = await getAthlete(tokens.accessToken)
-        if (!athlete) {
-          throw new Error('No Athlete found for current accessToken in local storage. Non-expired token.')
+      else {
+        try {
+          console.log('Current accessToken not expired -> Getting Athlete')
+          const athlete = await getAthlete(tokens.accessToken)
+          if (!athlete) {
+            throw new Error('No Athlete found for current accessToken in local storage. Non-expired token.')
+          }
+          setAthlete(athlete)
+          return
+        } catch (err) {
+          console.error(err)
+          return
         }
-        setAthlete(athlete)
-        return
-      } catch (err) {
-        console.error(err)
-        return
       }
-      return
     }
     // If there's currently no athlete.id that means that the Zustand store has
     // lost it's athlete data (could be due to refreshed window or something else).
@@ -71,7 +74,7 @@ export const useReAuth = (tokens: StravaData) => {
       // console.log('No Athlete ID in store -> Reauth')
       // const localStorageObj = localStorage.getItem('strava')
       // const storedTokens = JSON.parse(localStorageObj!)
-      reAuthenticate(tokens)
+      reAuthenticate(tokens, userId)
     }
-  }, [athlete?.id, setAthlete , mutateAsync, tokens])
+  }, [athlete?.id, setAthlete , mutateAsync, tokens, userId])
 }

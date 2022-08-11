@@ -8,11 +8,12 @@ import { useLocalStorageTokens } from '../../hooks/localStorageTokens'
 
 
 interface UserActivityProps {
-  tokens: StravaData
+  tokens: StravaData,
+  userId: string
 }
 
-export const UserActivity: FC<UserActivityProps> = ({ tokens }) => {
-  const { isLoading, data: activities } = useAthleteActivities(tokens)
+export const UserActivity: FC<UserActivityProps> = ({ tokens, userId }) => {
+  const { isLoading, data: activities } = useAthleteActivities(tokens, userId)
 
   if(isLoading || !activities) {
     return (
@@ -43,7 +44,7 @@ const ActivityMain: FC<ActivityMainProps> = ({userId}) => {
   // At this point an access Token should always exist -> Needs to render component
   // that checks if we need to re auth or now.
   return (
-    <UserActivity tokens={tokens} />
+    <UserActivity tokens={tokens} userId={userId}/>
   )
 }
 

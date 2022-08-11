@@ -39,15 +39,15 @@ export const stravaDataRouter = createRouter()
   })
   .mutation('edit', {
     input: z.object({
-      id: z.string(),
+      userId: z.string(),
       refreshToken: z.string(),
       accessToken: z.string(),
       expiresAt: z.number()
     }),
-    resolve: async ({input: {id, refreshToken, accessToken, expiresAt}, ctx}) => {
+    resolve: async ({input: {userId, refreshToken, accessToken, expiresAt}, ctx}) => {
       return ctx.prisma.stravaData.update({
         where: {
-          id
+          userId
         },
         data: {
           accessToken,

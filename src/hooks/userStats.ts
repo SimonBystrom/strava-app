@@ -11,10 +11,10 @@ import { useReAuth } from "./reAuth"
 /**
  * Gives the Stats for the currently authenticated user
  */
-export const useAthleteStats = (tokens: StravaData) => {
+export const useAthleteStats = (tokens: StravaData, userId: string) => {
   const { athlete } = useUserStore()
   // Runs the useReAuth to check if re-authentication is neccessary.
-  useReAuth(tokens)
+  useReAuth(tokens, userId)
   return useQuery(
     ['userStats', athlete?.id, athlete.id],
     () => getUserStats(athlete?.id, tokens.accessToken),
