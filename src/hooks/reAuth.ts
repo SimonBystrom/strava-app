@@ -20,7 +20,6 @@ export const useReAuth = (tokens: StravaData, userId: string) => {
     const reAuthenticate = async (tokens: StravaData, userId: string) => {
       const expired = new Date(tokens.expiresAt * 1000) < new Date()
 
-      // console.log('Running expired check with these params -> ', )
       if (expired) {
         console.info('Access token expired -> Reatuh with refreshToken')
         try {
@@ -70,10 +69,6 @@ export const useReAuth = (tokens: StravaData, userId: string) => {
     // components depend on having Athlete Data.
     // To be able to get the Athlete ID we need to re-Authenticate.
     if (!athlete?.id && tokens) {
-      console.log('REAUTH --> running reauthing', tokens)
-      // console.log('No Athlete ID in store -> Reauth')
-      // const localStorageObj = localStorage.getItem('strava')
-      // const storedTokens = JSON.parse(localStorageObj!)
       reAuthenticate(tokens, userId)
     }
   }, [athlete?.id, setAthlete , mutateAsync, tokens, userId])
