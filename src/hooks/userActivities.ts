@@ -10,11 +10,12 @@ import { useReAuth } from "./reAuth"
  */
 export const useAthleteActivities = (tokens: StravaData, userId: string) => {
   // Runs the useReAuth to check if re-authentication is neccessary.
-  useReAuth(tokens, userId)
+  const returnTokens = useReAuth(tokens, userId)
   return useQuery(
-    ['userActivities', tokens.accessToken],
-    () => getUserActivities(tokens.accessToken),
+    ['userActivities', returnTokens.accessToken],
+    () => getUserActivities(returnTokens.accessToken),
     {
+      enabled: !!returnTokens.accessToken,
       // 5 min cached results
       staleTime: 300000,
     }

@@ -1,9 +1,15 @@
 import { StravaData } from "@prisma/client"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 // import { Tokens } from "../components/userMain/userMain"
 import { useUserStore } from "../stores/userStore"
 import { getAthlete, reAuthGetter } from "../utils/strava"
 import { trpc } from "../utils/trpc"
+
+type TokenData = {
+  refreshToken: string,
+  accessToken: string,
+  expiresAt: number,
+}
 
 /**
  * Reauthenticates the current user if needed.
@@ -14,6 +20,11 @@ export const useReAuth = (tokens: StravaData, userId: string) => {
     setAthlete
   } = useUserStore()
   const {mutateAsync} = trpc.useMutation(['stravaData.edit'])
+  const [ returnTokens, setReturnTokens] = useState<TokenData>({
+    refreshToken: '',
+    accessToken: '',
+    expiresAt: 0
+  })
 
 
   useEffect(() => {
@@ -28,7 +39,6 @@ export const useReAuth = (tokens: StravaData, userId: string) => {
             accessToken: newTokens!.accessToken,
             refreshToken: newTokens!.refreshToken,
             expiresAt: newTokens!.expiresAt,
-            athlete: newTokens!.athlete,
           }
           localStorage.setItem('strava', JSON.stringify(newTokens))
           // TODO: Check if this actually updates DB properly
@@ -43,6 +53,9 @@ export const useReAuth = (tokens: StravaData, userId: string) => {
           }
           setAthlete(athlete)
           console.log('athlete after reauth', athlete)
+          setReturnTokens({
+            ...stravaTokens,
+          })
           return
         } catch (err) {
           console.error(err)
@@ -58,6 +71,9 @@ export const useReAuth = (tokens: StravaData, userId: string) => {
           }
           setAthlete(athlete)
           console.log('athlete after reauth', athlete)
+          setReturnTokens({
+            ...tokens,
+          })
           return
         } catch (err) {
           console.error(err)
@@ -75,4 +91,6 @@ export const useReAuth = (tokens: StravaData, userId: string) => {
       reAuthenticate(tokens, userId)
     }
   }, [athlete?.id, setAthlete , mutateAsync, tokens, userId])
+
+  return returnTokens
 }
