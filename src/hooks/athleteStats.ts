@@ -6,6 +6,7 @@ import { useQuery } from "react-query"
 import { useUserStore } from "../stores/userStore"
 import { getUserStats } from "../utils/strava"
 import { trpc } from "../utils/trpc"
+import { useLocalStorageTokens } from "./localStorageTokens"
 import { useReAuth } from "./reAuth"
 
 /**
@@ -27,3 +28,4 @@ export const useAthleteStats = (tokens: StravaData, userId: string) => {
     }
   )
 }
+

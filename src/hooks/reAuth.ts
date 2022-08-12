@@ -21,9 +21,9 @@ export const useReAuth = (tokens: StravaData, userId: string) => {
   } = useUserStore()
   const {mutateAsync} = trpc.useMutation(['stravaData.edit'])
   const [ returnTokens, setReturnTokens] = useState<TokenData>({
-    refreshToken: '',
-    accessToken: '',
-    expiresAt: 0
+    refreshToken: tokens.refreshToken,
+    accessToken: tokens.accessToken,
+    expiresAt: tokens.expiresAt
   })
 
 

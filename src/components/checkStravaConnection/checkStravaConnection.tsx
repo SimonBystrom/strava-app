@@ -59,7 +59,8 @@ export const CheckStravaConnection: FC<CheckStravaConnectionProps> = ({ userId, 
   switch (checkAgainst) {
     case 'userStats':
       return (
-        <UserStats tokens={tokens} userId={userId}/>
+        // <UserStats tokens={tokens} userId={userId}/>
+        <UserStats tokens={tokens}/>
       )
     case 'userActivity':
       return (
