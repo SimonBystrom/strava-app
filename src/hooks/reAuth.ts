@@ -93,6 +93,6 @@ export const useReAuth = (tokens: StravaData, userId: string) => {
     }
     setReturnTokens(tokens)
   }, [athlete?.id, setAthlete , mutateAsync, tokens, userId])
-
+  console.log('Return tokens set by reauth', returnTokens)
   return returnTokens
 }

@@ -20,7 +20,7 @@ export const useLocalStorageTokens = () => {
     const checkLocalStorage = async () => {
       const localStorageObj = await asyncLocalStorage.getItem('strava')
       if (localStorageObj) {
-        console.log('local Storage with tokens found in UserMain')
+        console.log('local Storage with tokens found in useLocalStorage hook', JSON.parse(localStorageObj))
         setTokens(JSON.parse(localStorageObj))
       }
     }

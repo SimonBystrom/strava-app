@@ -18,8 +18,9 @@ interface CheckStravaConnectionProps {
 export const CheckStravaConnection: FC<CheckStravaConnectionProps> = ({ userId, checkAgainst }) => {
   const { data: stravaData, isLoading } = trpc.useQuery(['stravaData.getById', { id: userId }])
   const [tokens, setTokens] = useState<StravaData | null>(null)
-
+  console.log('Check Strava connection')
   useEffect(() => {
+    console.log('starting check strava connection useEffect')
     const setLocalStorage = async (stravaData: StravaData) => {
       const stravaTokens = {
         accessToken: stravaData.accessToken,
@@ -30,13 +31,17 @@ export const CheckStravaConnection: FC<CheckStravaConnectionProps> = ({ userId, 
       setTokens(stravaData)
     }
     if (stravaData && !isLoading) {
+      console.log('Strava check data if statement loaded -> StravaData found, and trpc client is not loading')
       setLocalStorage(stravaData)
     }
   }, [stravaData, isLoading])
 
   if (isLoading) {
     return (
-      <Loader size="xl" />
+      <>
+        <Loader size="xl" />
+        <p>Check strava loader...</p>
+      </>
     )
   }
 
