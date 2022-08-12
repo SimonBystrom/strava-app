@@ -18,7 +18,7 @@ interface CheckStravaConnectionProps {
 
 export const CheckStravaConnection: FC<CheckStravaConnectionProps> = ({ userId, checkAgainst }) => {
   const { data: stravaData, isLoading } = trpc.useQuery(['stravaData.getById', { id: userId }])
-  const [tokens, setTokens] = useState<StravaData | null>(null)
+  // const [tokens, setTokens] = useState<StravaData | null>(null)
   const { setAthlete } = useUserStore()
   const { mutateAsync } = trpc.useMutation(['stravaData.edit'])
   console.log('Check Strava connection')
@@ -58,16 +58,7 @@ export const CheckStravaConnection: FC<CheckStravaConnectionProps> = ({ userId, 
       setAthlete(athleteData)
       return
     }
-    console.log('starting check strava connection useEffect')
-    const setLocalStorage = async (stravaData: StravaData) => {
-      const stravaTokens = {
-        accessToken: stravaData.accessToken,
-        refreshToken: stravaData.refreshToken,
-        expiresAt: stravaData.expiresAt
-      }
-      await asyncLocalStorage.setItem('strava', JSON.stringify(stravaTokens))
-      setTokens(stravaData)
-    }
+
     if (stravaData && !isLoading) {
       console.log('Strava check data if statement loaded -> StravaData found, and trpc client is not loading')
       getAthleteData(stravaData)
@@ -85,7 +76,7 @@ export const CheckStravaConnection: FC<CheckStravaConnectionProps> = ({ userId, 
 
   // If no strava data was found -> User doesn't have connected Strava account
   // TODO: Separate into own component / Make it look good!
-  if (!stravaData || !tokens) {
+  if (!stravaData ) {
     return (
       <div>
         <button onClick={() => handleLogin(userId)}>Connect to strava</button>
@@ -98,11 +89,11 @@ export const CheckStravaConnection: FC<CheckStravaConnectionProps> = ({ userId, 
     case 'userStats':
       return (
         // <UserStats tokens={tokens} userId={userId}/>
-        <UserStats tokens={tokens}/>
+        <UserStats tokens={stravaData}/>
       )
     case 'userActivity':
       return (
-        <UserActivity tokens={tokens} userId={userId} />
+        <UserActivity tokens={stravaData} userId={userId} />
       )
 
     default:
