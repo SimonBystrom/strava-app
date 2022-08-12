@@ -89,7 +89,9 @@ export const useReAuth = (tokens: StravaData, userId: string) => {
     if (!athlete?.id && tokens) {
       console.log('reauthing...')
       reAuthenticate(tokens, userId)
+      return
     }
+    setReturnTokens(tokens)
   }, [athlete?.id, setAthlete , mutateAsync, tokens, userId])
 
   return returnTokens
