@@ -10,7 +10,7 @@ import UserMain from "../../components/userMain/userMain";
 const User: NextPage = () => {
   const { data: session, status } = useSession()
   const router = useRouter()
-
+  console.log('Sessions status', status, 'session', session)
   useEffect(() => {
     if(status === 'unauthenticated') {
       router.push('/')
@@ -21,7 +21,10 @@ const User: NextPage = () => {
   if (status === 'loading' || !session) {
     return (
       <Layout activePage='Home'>
-        <Loader size="xl" />
+        <>
+          <Loader size="xl" />
+          <p>Status Loading for session</p>
+        </>
       </Layout>
     )
   }

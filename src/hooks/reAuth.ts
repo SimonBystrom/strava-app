@@ -36,12 +36,13 @@ export const useReAuth = (tokens: StravaData, userId: string) => {
             ...stravaTokens,
             userId: userId
           })
-
+          console.log('new tokens after fetch', newTokens)
           const athlete = await getAthlete(stravaTokens.accessToken)
           if (!athlete) {
             throw new Error('No Athlete found for current accessToken in local storage. Non-expired token.')
           }
           setAthlete(athlete)
+          console.log('athlete after reauth', athlete)
           return
         } catch (err) {
           console.error(err)
@@ -56,6 +57,7 @@ export const useReAuth = (tokens: StravaData, userId: string) => {
             throw new Error('No Athlete found for current accessToken in local storage. Non-expired token.')
           }
           setAthlete(athlete)
+          console.log('athlete after reauth', athlete)
           return
         } catch (err) {
           console.error(err)
@@ -69,6 +71,7 @@ export const useReAuth = (tokens: StravaData, userId: string) => {
     // components depend on having Athlete Data.
     // To be able to get the Athlete ID we need to re-Authenticate.
     if (!athlete?.id && tokens) {
+      console.log('reauthing...')
       reAuthenticate(tokens, userId)
     }
   }, [athlete?.id, setAthlete , mutateAsync, tokens, userId])
