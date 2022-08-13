@@ -1,9 +1,10 @@
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
 import { Loader } from '@mantine/core';
 import { useAthleteStats } from '../../hooks/athleteStats';
 // import { BaseStats } from '../../stores/userStatsStore';
 import ConnectToStrava from '../checkStravaConnection/checkStravaConnection';
 import { BaseStats } from '../../types/stravaTypes';
+import { trpc } from '../../utils/trpc';
 
 interface UserStatsProps {
   athleteStats: BaseStats
@@ -29,6 +30,9 @@ interface UserMainProps {
 const UserMain: FC<UserMainProps> = ({userId}) => {
   const {data: athleteStats, isLoading} = useAthleteStats(userId)
 
+
+
+
   if (isLoading) {
     return (
       <>
@@ -42,7 +46,7 @@ const UserMain: FC<UserMainProps> = ({userId}) => {
   }
 
   return (
-    <UserStats athleteStats={athleteStats} />
+    <UserStats athleteStats={athleteStats.res} />
   )
 }
 

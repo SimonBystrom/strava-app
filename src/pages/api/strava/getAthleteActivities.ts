@@ -25,6 +25,7 @@ type AuthResponse = {
   accessToken: string,
   refreshToken: string,
   expiresAt: number,
+  athleteId: number,
 }
 
 /**
@@ -42,22 +43,34 @@ export const getUserActivities = async (
     console.log('Starting fetch based on db Tokens ...')
     let response: AxiosResponse
     let activityRes: AxiosResponse
+    let tokens: AuthResponse
     let page = 1
     let allResultsFetched = false
     const activities: Activity[] = []
-
-    try {
-      response = await axios.post(
-        `https://www.strava.com/oauth/token?client_id=${clientId}&client_secret=${clientSecret}&refresh_token=${dbTokens.refreshToken}&grant_type=refresh_token`
-      )
-    } catch (error) {
-      console.log(error)
-      return
-    }
-    const tokens: AuthResponse = {
-      accessToken: response.data.access_token,
-      refreshToken: response.data.refresh_token,
-      expiresAt: response.data.expires_at,
+    const expired = new Date(dbTokens.expiresAt * 1000) < new Date()
+    if(expired) {
+      console.log('expired in Activirt Api')
+      try {
+        response = await axios.post(
+          `https://www.strava.com/oauth/token?client_id=${clientId}&client_secret=${clientSecret}&refresh_token=${dbTokens.refreshToken}&grant_type=refresh_token`
+        )
+      } catch (error) {
+        console.log(error)
+        return
+      }
+      tokens = {
+        accessToken: response.data.access_token,
+        refreshToken: response.data.refresh_token,
+        expiresAt: response.data.expires_at,
+        athleteId: dbTokens.athleteId
+      }
+    } else {
+      tokens = {
+        accessToken: dbTokens.accessToken,
+        refreshToken: dbTokens.refreshToken,
+        expiresAt: dbTokens.expiresAt,
+        athleteId: dbTokens.athleteId
+      }
     }
     // Loop over all pages to get all activities.
     while (!allResultsFetched) {
@@ -84,7 +97,11 @@ export const getUserActivities = async (
         break
       }
     }
-    return activities
+    return {
+      res: activities,
+      expired,
+      tokens,
+    }
   }
   return
 }
