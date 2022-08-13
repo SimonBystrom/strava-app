@@ -1,13 +1,7 @@
 import type { NextPage } from "next";
-import { signIn, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import Head from "next/head";
-import Link from "next/link";
-import { useCallback, useEffect } from "react";
-import { useForm, zodResolver } from "@mantine/form";
-import { ILogin, loginSchema } from "../server/validations/auth";
-import { handleLogin } from "../utils/strava";
-import styles from '../styles/Home.module.scss'
-import { Button, TextInput } from "@mantine/core";
+import { useEffect } from "react";
 import Layout from "../components/layout/layout";
 import UserLogin from "../components/userLogin/userLogin";
 import { useRouter } from "next/router";
@@ -35,15 +29,6 @@ const Home: NextPage = () => {
       </Layout>
     </>
   )
-  // TODO:
-  // Get the strava info -> Save the strava access_token and refersh_token in db
-  // use the previous setup to quickly move between the tabs
-  // return (
-  //   <div className={styles.container}>
-  //     <button onClick={() => handleLogin()}>Connect to strava</button>
-  //     <p>{session?.user?.email}</p>
-  //   </div>
-  // )
 
 };
 

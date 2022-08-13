@@ -1,27 +1,18 @@
 import { Loader} from '@mantine/core'
 import { FC } from 'react'
-import { StravaData } from '@prisma/client'
-import { useAthleteActivities } from '../../hooks/userActivities'
+import { useAthleteActivities } from '../../hooks/athleteActivities'
 import Activities from './userActivity/activities/activites'
-import { CheckStravaConnection } from '../checkStravaConnection/checkStravaConnection'
-import { useLocalStorageTokens } from '../../hooks/localStorageTokens'
+import ConnectToStrava from '../checkStravaConnection/checkStravaConnection'
+import { Activity } from '../../types/stravaTypes'
 
 
 interface UserActivityProps {
-  tokens: StravaData,
-  userId: string
+  athleteActivities: Activity[]
 }
 
-export const UserActivity: FC<UserActivityProps> = ({ tokens, userId }) => {
-  const { isLoading, data: activities } = useAthleteActivities(tokens, userId)
-
-  if(isLoading || !activities) {
-    return (
-      <Loader size="xl" />
-    )
-  }
+export const UserActivity: FC<UserActivityProps> = ({ athleteActivities }) => {
   return (
-    <Activities activities={activities}/>
+    <Activities activities={athleteActivities}/>
   )
 }
 
@@ -31,20 +22,21 @@ interface ActivityMainProps {
 }
 
 const ActivityMain: FC<ActivityMainProps> = ({userId}) => {
-  const tokens = useLocalStorageTokens()
+  const { isLoading, data: athleteActivities } = useAthleteActivities(userId)
 
-  // If access token doesn't exit on local storage -> User hasn't logged in from this
-  // browser before or user hasn't linked Strava account with their account.
-  if (!tokens?.accessToken) {
+  if (isLoading) {
     return (
-      <CheckStravaConnection userId={userId} checkAgainst='userActivity' />
+      <>
+        <Loader size="xl" />
+        <p>Activity Main loader</p>
+      </>
     )
   }
-
-  // At this point an access Token should always exist -> Needs to render component
-  // that checks if we need to re auth or now.
+  if (!athleteActivities) {
+    return <ConnectToStrava userId={userId}/>
+  }
   return (
-    <UserActivity tokens={tokens} userId={userId}/>
+    <UserActivity athleteActivities={athleteActivities} />
   )
 }
 

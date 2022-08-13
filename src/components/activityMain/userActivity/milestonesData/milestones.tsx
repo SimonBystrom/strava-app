@@ -2,10 +2,10 @@ import { FC } from 'react'
 import classes from './milestones.module.scss'
 import classNames from 'classnames'
 import { FiAward } from 'react-icons/fi'
-import { RunningData, useRunsByPeriod } from '../../../../hooks/runsByPeriod'
+import { useRunsByPeriod } from '../../../../hooks/runsByPeriod'
 import { Tabs } from '@mantine/core'
 import dayjs from 'dayjs'
-import { Activity } from '../../../../stores/userActivitiesStore'
+import { Activity, RunningData } from '../../../../types/stravaTypes'
 
 interface DistanceBadgeProps {
   label: string,
