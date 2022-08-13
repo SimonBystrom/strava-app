@@ -71,7 +71,7 @@ export const getUserActivities = async (
         return
       }
 
-      if (!!response.data.length) {
+      if (!!activityRes.data.length) {
         for (const item of activityRes.data) {
           const activity = parseActivity(item)
           if (activity) {
