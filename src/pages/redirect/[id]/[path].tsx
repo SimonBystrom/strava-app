@@ -14,6 +14,7 @@ const Redirect: NextPage = () => {
 
 
   useEffect(() => {
+    console.log('tokens in path', tokens)
     const authenticate = async () => {
       if (tokens && !isLoading) {
         await mutateAsync({
@@ -27,10 +28,10 @@ const Redirect: NextPage = () => {
           console.error('Error creating the DB Strava Data')
           return
         }
+        router.push(`/dashboard/user`)
       }
     }
     authenticate()
-    router.push(`/dashboard/user`)
   }, [tokens, isLoading, creatingError, mutateAsync, id, router])
 
   return(
