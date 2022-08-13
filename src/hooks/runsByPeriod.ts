@@ -1,25 +1,8 @@
-import { Activity, ActivityTime } from "../stores/userActivitiesStore"
+
+import { Activity, RunningData, TimePeriod } from "../types/stravaTypes"
 import { convertToHourMinSec } from "../utils/timeConverter"
 
-export enum TimePeriod {
-  Month = 'month',
-  Year = 'year',
-  All = 'all',
-  Custom = 'custom'
-}
 
-export type RunningData = {
-  total: number,
-  time: ActivityTime,
-  distance: number,
-  oneKM: number,
-  twoKM: number,
-  threeKM: number,
-  fiveKM: number,
-  tenKM: number,
-  // halfMarathon: number,
-  // marathon: number,
-}
 
 const getActivitiesByPeriod = (
   activities: Activity[],

@@ -1,8 +1,8 @@
 import { FC } from 'react'
 import classes from './customTimeRangeData.module.scss'
-import { RunningData } from '../../../../hooks/runsByPeriod'
 import TimePeriodData from '../timePeriodData/timePeriodData'
 import { DateRangePicker } from '@mantine/dates'
+import { RunningData } from '../../../../types/stravaTypes'
 
 interface CustomTimeRangeDataProps {
   period: RunningData | null | undefined

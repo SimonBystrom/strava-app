@@ -7,13 +7,14 @@ export const stravaDataRouter = createRouter()
   .mutation('create', {
     input: stravaDataSchema,
     resolve: async ({input, ctx}) => {
-      const {accessToken, refreshToken, expiresAt, userId} = input
+      const {accessToken, refreshToken, expiresAt, userId, athleteId} = input
 
       const results = await ctx.prisma.stravaData.create({
         data: {
           accessToken,
           refreshToken,
           expiresAt,
+          athleteId,
           user: {
             connect: {id: userId}
           }
@@ -38,13 +39,8 @@ export const stravaDataRouter = createRouter()
     }
   })
   .mutation('edit', {
-    input: z.object({
-      userId: z.string(),
-      refreshToken: z.string(),
-      accessToken: z.string(),
-      expiresAt: z.number()
-    }),
-    resolve: async ({input: {userId, refreshToken, accessToken, expiresAt}, ctx}) => {
+    input: stravaDataSchema,
+    resolve: async ({input: {userId, refreshToken, accessToken, expiresAt, athleteId}, ctx}) => {
       return ctx.prisma.stravaData.update({
         where: {
           userId
@@ -53,6 +49,7 @@ export const stravaDataRouter = createRouter()
           accessToken,
           refreshToken,
           expiresAt,
+          athleteId,
         }
       })
     }

@@ -1,4 +1,5 @@
-import { ActivityTime } from "../stores/userActivitiesStore"
+import { ActivityTime } from "../types/stravaTypes"
+
 
 export const convertToHourMinSec = (totalSec: number): ActivityTime => {
   const hours = Math.floor(totalSec / 3600)

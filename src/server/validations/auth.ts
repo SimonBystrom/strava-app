@@ -14,6 +14,7 @@ export const stravaDataSchema = z.object({
   refreshToken: z.string(),
   expiresAt: z.number(),
   userId: z.string(),
+  athleteId: z.number(),
 })
 
 export type ILogin = z.infer<typeof loginSchema>;
