@@ -11,8 +11,9 @@ import classes from './activities.module.scss'
 
 interface ActivitiesProps {
   activities: Activity[]
+  userId: string
 }
-const Activities: FC<ActivitiesProps> = ({ activities }) => {
+const Activities: FC<ActivitiesProps> = ({ activities, userId }) => {
   const [customPeriod, setCustomPeriod] = useState<[Date | null, Date | null]>([null, null])
   const { month, year, all, custom } = useRunsByPeriod(activities, customPeriod)
   const allDates = useAllActivityDates(activities)
@@ -60,7 +61,7 @@ const Activities: FC<ActivitiesProps> = ({ activities }) => {
       </div>
       <div className={classes.MilestonesContainer}>
         <h2>MILESTONES</h2>
-        <Milestones activities={activities} customPeriod={customPeriod} />
+        <Milestones activities={activities} customPeriod={customPeriod} userId={userId}/>
       </div>
       <div className={classes.GoalsContainer}>
         <h2>GOALS</h2>

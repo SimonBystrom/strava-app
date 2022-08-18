@@ -1,22 +1,8 @@
 import { Loader} from '@mantine/core'
-import { FC, useEffect } from 'react'
+import { FC } from 'react'
 import { useAthleteActivities } from '../../hooks/athleteActivities'
 import Activities from './userActivity/activities/activites'
 import ConnectToStrava from '../checkStravaConnection/checkStravaConnection'
-import { Activity } from '../../types/stravaTypes'
-import { trpc } from '../../utils/trpc'
-
-
-interface UserActivityProps {
-  athleteActivities: Activity[]
-}
-
-export const UserActivity: FC<UserActivityProps> = ({ athleteActivities }) => {
-  return (
-    <Activities activities={athleteActivities}/>
-  )
-}
-
 
 interface ActivityMainProps {
   userId: string
@@ -37,7 +23,7 @@ const ActivityMain: FC<ActivityMainProps> = ({userId}) => {
     return <ConnectToStrava userId={userId}/>
   }
   return (
-    <UserActivity athleteActivities={athleteActivities.res} />
+    <Activities activities={athleteActivities.res} userId={userId}/>
   )
 }
 

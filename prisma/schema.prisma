@@ -29,6 +29,7 @@ model User {
   password      String
   image         String?
   stravaData    StravaData?
+  milestones    Milestone[]
 }
 
 model StravaData {
@@ -55,4 +56,22 @@ model goals {
   id   String @id @default(auto()) @map("_id") @db.ObjectId
   createdAt DateTime? @default(now())
   name String
+}
+
+model Milestone {
+  id  String @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime? @default(now())
+  label String
+  distanceStart Int
+  distanceEnd Int
+  forPeriod MilestonePeriod @default(CUSTOM)
+  user          User @relation(fields: [userId], references: [id])
+  userId String @db.ObjectId
+}
+
+enum MilestonePeriod {
+  CURRENT_MONTH
+  CURRENT_YEAR
+  ALL_TIME
+  CUSTOM
 }

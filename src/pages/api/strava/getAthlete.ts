@@ -1,6 +1,6 @@
 import { StravaData } from "@prisma/client"
 import axios, { AxiosResponse } from "axios"
-import { BaseStats } from "../../../types/stravaTypes"
+import { BaseStats, StravaAccount } from "../../../types/stravaTypes"
 import { convertToHourMinSec } from "../../../utils/timeConverter"
 
 
@@ -47,9 +47,9 @@ export const getStravaAthlete = async (
       }
     }
 
-    let athleteData: AxiosResponse
+    let athleteStats: AxiosResponse
     try {
-      athleteData = await axios.get(
+      athleteStats = await axios.get(
         `https://www.strava.com/api/v3/athletes/${dbTokens.athleteId}/stats`,
         { headers: { Authorization: `Bearer ${tokens.accessToken}` } }
       )
@@ -57,17 +57,41 @@ export const getStravaAthlete = async (
       console.log(error)
       return
     }
+    let athlete: AxiosResponse
+    try {
+      athlete = await axios.get(
+        `https://www.strava.com/api/v3/athlete`,
+        { headers: { Authorization: `Bearer ${tokens.accessToken}` } }
+      )
+    } catch (error) {
+      console.log(error)
+      return
+    }
 
-    const parsedResponse: BaseStats = {
-      count: athleteData.data.all_run_totals.count,
-      distance: athleteData.data.all_run_totals.distance,
-      elapsedTime: convertToHourMinSec(athleteData.data.all_run_totals.elapsed_time),
-      elevationGain: athleteData.data.all_run_totals.elevation_gain,
-      movingTime: convertToHourMinSec(athleteData.data.all_run_totals.moving_time)
+    console.log('--->', athlete)
+
+
+
+    const parsedAthlete: StravaAccount = {
+      profilePicUrl: athlete.data.profile,
+      firstName: athlete.data.firstname,
+      lastName: athlete.data.lastname,
+      username: athlete.data.username,
+      premium: athlete.data.premium,
+      createdAt: athlete.data.created_at
+    }
+
+    const parsedAthleteStats: BaseStats = {
+      count: athleteStats.data.all_run_totals.count,
+      distance: athleteStats.data.all_run_totals.distance,
+      elapsedTime: convertToHourMinSec(athleteStats.data.all_run_totals.elapsed_time),
+      elevationGain: athleteStats.data.all_run_totals.elevation_gain,
+      movingTime: convertToHourMinSec(athleteStats.data.all_run_totals.moving_time)
     }
 
     return {
-      res: parsedResponse,
+      stats: parsedAthleteStats,
+      account: parsedAthlete,
       expired,
       tokens
     }

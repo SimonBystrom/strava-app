@@ -57,3 +57,13 @@ export type BaseStats = {
   elevationGain: number,
   movingTime: ActivityTime,
 }
+
+
+export type StravaAccount = {
+  profilePicUrl: string,
+  firstName: string,
+  lastName: string,
+  username: string,
+  premium: boolean,
+  createdAt: Date,
+}
