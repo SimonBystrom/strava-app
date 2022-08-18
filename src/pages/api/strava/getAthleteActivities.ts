@@ -35,12 +35,10 @@ export const getUserActivities = async (
   dbTokens: StravaData,
 ) => {
 
-  console.log('API dbTokens', dbTokens)
   const clientId = process.env.NEXT_PUBLIC_STRAVA_CLIENT_ID
   const clientSecret = process.env.NEXT_PUBLIC_STRAVA_CLIENT_SECRET
 
   if (dbTokens) {
-    console.log('Starting fetch based on db Tokens ...')
     let response: AxiosResponse
     let activityRes: AxiosResponse
     let tokens: AuthResponse
@@ -49,7 +47,6 @@ export const getUserActivities = async (
     const activities: Activity[] = []
     const expired = new Date(dbTokens.expiresAt * 1000) < new Date()
     if(expired) {
-      console.log('expired in Activirt Api')
       try {
         response = await axios.post(
           `https://www.strava.com/oauth/token?client_id=${clientId}&client_secret=${clientSecret}&refresh_token=${dbTokens.refreshToken}&grant_type=refresh_token`

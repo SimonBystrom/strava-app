@@ -10,7 +10,6 @@ import UserMain from "../../components/userMain/userMain";
 const User: NextPage = () => {
   const { data: session, status } = useSession()
   const router = useRouter()
-  console.log('Sessions status -->', status, 'session -->', session)
   useEffect(() => {
     if(status === 'unauthenticated') {
       router.push('/')

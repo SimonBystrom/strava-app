@@ -7,9 +7,7 @@ import * as api from '../pages/api/strava/getAthleteActivities'
  * Gives the Activities for the currently authenticated user
  */
 export const useAthleteActivities = (userId: string) => {
-  console.log('useAthleteActivites hook id', userId)
   const { data: dbTokens, isLoading } = trpc.useQuery(['stravaData.getById', { id: userId }])
-  console.log('dbTokens in hook', dbTokens, 'isLoading?', isLoading)
   const { mutateAsync } = trpc.useMutation(['stravaData.edit'])
 
   return useQuery(
@@ -20,7 +18,6 @@ export const useAthleteActivities = (userId: string) => {
       // 5 min cached results
       staleTime: 300000,
       onSuccess: (data) => {
-        console.log('data in activity hook', data)
         if(data!.expired) {
           mutateAsync({
             ...data!.tokens,

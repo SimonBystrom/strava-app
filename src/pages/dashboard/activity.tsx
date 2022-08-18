@@ -10,7 +10,6 @@ import Layout from '../../components/layout/layout'
 const ActivityPage: NextPage = () => {
   const { data: session, status } = useSession()
   const router = useRouter()
-  console.log('Sessions status', status, 'session', session)
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push('/')

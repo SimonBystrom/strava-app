@@ -11,18 +11,15 @@ type AuthResponse = {
 export const authenticateAthlete = async (
   authToken: string
 ) => {
-  console.log('API authToken', authToken)
   const clientId = process.env.NEXT_PUBLIC_STRAVA_CLIENT_ID
   const clientSecret = process.env.NEXT_PUBLIC_STRAVA_CLIENT_SECRET
 
   if(authToken) {
-    console.log('Starting auth from api ...')
     let response: AxiosResponse
     try {
       response = await axios.post(
         `https://www.strava.com/oauth/token?client_id=${clientId}&client_secret=${clientSecret}&code=${authToken}&grant_type=authorization_code`
       )
-      console.log('atuth athlete', response.data.athlete)
     } catch (error) {
       console.log(error)
       return

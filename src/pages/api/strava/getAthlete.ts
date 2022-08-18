@@ -14,12 +14,10 @@ type AuthResponse = {
 export const getStravaAthlete = async (
   dbTokens: StravaData,
 ) => {
-  console.log('API dbTokens', dbTokens)
   const clientId = process.env.NEXT_PUBLIC_STRAVA_CLIENT_ID
   const clientSecret = process.env.NEXT_PUBLIC_STRAVA_CLIENT_SECRET
 
   if(dbTokens) {
-    console.log('Starting fetch based on db Tokens ...')
     let response: AxiosResponse
     let tokens: AuthResponse
 

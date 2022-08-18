@@ -14,7 +14,6 @@ const Redirect: NextPage = () => {
 
 
   useEffect(() => {
-    console.log('tokens in path', tokens)
     const authenticate = async () => {
       if (tokens && !isLoading) {
         await mutateAsync({
