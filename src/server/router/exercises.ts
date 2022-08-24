@@ -18,7 +18,7 @@ export const exercisesRouter = createRouter()
   .mutation('createExercise', {
     input: exerciseSchema,
     resolve: async ({input, ctx}) => {
-      const {name, reps, description, exerciseTemplateData, userId, exerciseTemplateId} = input
+      const {name, reps, description, workoutData, userId, workoutId} = input
 
       return await ctx.prisma.exercise.create({
         data: {
@@ -30,22 +30,22 @@ export const exercisesRouter = createRouter()
               id: userId
             }
           },
-          exerciseTemplates: {
+          workouts: {
             connectOrCreate: [
               {
                 create: {
-                  name: exerciseTemplateData.templateName,
-                  sets: exerciseTemplateData.templateSets
+                  name: workoutData.name,
+                  sets: workoutData.sets
                 },
                 where: {
-                  id: exerciseTemplateId
+                  id: workoutId
                 }
               }
             ]
           }
         },
         include: {
-          exerciseTemplates: true,
+          workouts: true,
           user: true
         }
       })

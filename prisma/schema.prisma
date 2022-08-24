@@ -2,16 +2,16 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "mongodb"
-    // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.text annotations in model Account below
-    // Further reading:
-    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
-    url      = env("DATABASE_URL")
+  provider = "mongodb"
+  // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.text annotations in model Account below
+  // Further reading:
+  // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
+  // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
+  url      = env("DATABASE_URL")
 }
 
 // model Athlete {
@@ -21,72 +21,70 @@ datasource db {
 //   lastname String
 // }
 
-
 model User {
-  id            String  @id @default(auto()) @map("_id") @db.ObjectId
-  username      String?
-  email         String   @unique
-  password      String
-  image         String?
-  stravaData    StravaData?
-  milestones    Milestone[]
+  id              String      @id @default(auto()) @map("_id") @db.ObjectId
+  username        String?
+  email           String      @unique
+  password        String
+  image           String?
+  stravaData      StravaData?
+  milestones      Milestone[]
   createdExercies Exercise[]
 }
 
 model StravaData {
-  id            String  @id @default(auto()) @map("_id") @db.ObjectId
-  refreshToken  String
-  accessToken   String
-  athleteId     Int
-  expiresAt     Int
-  user          User @relation(fields: [userId], references: [id])
-  userId String @unique @db.ObjectId
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  refreshToken String
+  accessToken  String
+  athleteId    Int
+  expiresAt    Int
+  user         User   @relation(fields: [userId], references: [id])
+  userId       String @unique @db.ObjectId
 }
 
-model ExerciseTemplate {
-  id     String  @id @default(auto()) @map("_id") @db.ObjectId
-  name   String
-  sets   Int
-  exercises Exercise[] @relation(fields: [exerciseIDs], references: [id])
-  exerciseIDs String[] @db.ObjectId
+model Workout {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  sets        Int
+  exercises   Exercise[] @relation(fields: [exerciseIDs], references: [id])
+  exerciseIDs String[]   @db.ObjectId
 }
 
 model Exercise {
-  id     String  @id @default(auto()) @map("_id") @db.ObjectId
-  name   String
-  reps   String
-  user User @relation(fields: [userId], references: [id])
-  userId String @unique @db.ObjectId
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  reps        String
+  user        User      @relation(fields: [userId], references: [id])
+  userId      String    @unique @db.ObjectId
   description String?
-  exerciseTemplates ExerciseTemplate[] @relation(fields: [exerciseTemplateIDs], references: [id])
-  exerciseTemplateIDs String[] @db.ObjectId
+  workouts    Workout[] @relation(fields: [workoutIDs], references: [id])
+  workoutIDs  String[]  @db.ObjectId
 }
 
 model VerificationToken {
-    id         String  @id @default(auto()) @map("_id") @db.ObjectId
-    identifier String
-    token      String   @unique
-    expires    DateTime
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  identifier String
+  token      String   @unique
+  expires    DateTime
 
-    @@unique([identifier, token])
+  @@unique([identifier, token])
 }
 
-
 model goals {
-  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
   createdAt DateTime? @default(now())
-  name String
+  name      String
 }
 
 model Milestone {
-  id  String @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt DateTime? @default(now())
-  label String
+  id            String          @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt     DateTime?       @default(now())
+  label         String
   distanceStart Int
-  distanceEnd Int
-  forPeriod MilestonePeriod @default(CUSTOM)
-  user          User @relation(fields: [userId], references: [id])
-  userId String @db.ObjectId
+  distanceEnd   Int
+  forPeriod     MilestonePeriod @default(CUSTOM)
+  user          User            @relation(fields: [userId], references: [id])
+  userId        String          @db.ObjectId
 }
 
 enum MilestonePeriod {

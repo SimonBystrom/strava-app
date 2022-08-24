@@ -5,9 +5,11 @@ export const exerciseSchema = z.object({
   reps: z.string().min(1),
   userId: z.string(),
   description: z.optional(z.string().min(4).max(240)),
-  exerciseTemplateId: z.optional(z.string()),
-  exerciseTemplateData: z.object({
-    templateName: z.string(),
-    templateSets: z.number(),
+  workoutId: z.optional(z.string()),
+  workoutData: z.object({
+    name: z.string(),
+    sets: z.number(),
   })
 })
+
+export type IExercises = z.infer<typeof exerciseSchema>
