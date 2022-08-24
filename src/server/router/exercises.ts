@@ -20,6 +20,7 @@ export const exercisesRouter = createRouter()
     resolve: async ({input, ctx}) => {
       const {name, reps, description, workoutData, userId, workoutId} = input
 
+      // TODO: Fix this so the connectOrCreate works for the creation
       return await ctx.prisma.exercise.create({
         data: {
           name,
