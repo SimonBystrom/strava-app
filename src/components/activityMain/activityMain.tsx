@@ -1,7 +1,7 @@
 import { Loader} from '@mantine/core'
 import { FC } from 'react'
 import { useAthleteActivities } from '../../hooks/athleteActivities'
-import Activities from './userActivity/activities/activites'
+import Activities from './activities/activites'
 import ConnectToStrava from '../checkStravaConnection/checkStravaConnection'
 
 interface ActivityMainProps {

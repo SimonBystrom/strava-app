@@ -2,12 +2,12 @@ import { FC } from 'react'
 import classes from './milestones.module.scss'
 import classNames from 'classnames'
 import { FiAward } from 'react-icons/fi'
-import { useRunsByPeriod } from '../../../../hooks/runsByPeriod'
 import { Tabs } from '@mantine/core'
 import dayjs from 'dayjs'
-import { Activity, RunningData } from '../../../../types/stravaTypes'
-import { useUserMilestones } from '../../../../hooks/userMilestones'
-import { MilestonePeriod } from '@prisma/client'
+// import { MilestonePeriod } from '@prisma/client'
+import { Activity, RunningData } from '../../../types/stravaTypes'
+import { useUserMilestones } from '../../../hooks/userMilestones'
+import { useRunsByPeriod } from '../../../hooks/runsByPeriod'
 
 interface DistanceBadgeProps {
   label: string,
@@ -71,45 +71,45 @@ const Milestones: FC<MilestonesProps> = ({ activities, customPeriod, userId }) =
   const { month, year, all, custom } = useRunsByPeriod(activities, customPeriod)
   const currentTime = new Date()
 
-  const filteredDataMonth = activities.filter(activity => {
-    const activityDate = new Date(activity.startDateLocal.slice(0, -1))
-    return (activityDate.getMonth() === currentTime.getMonth()) && (activityDate.getFullYear() === currentTime.getFullYear())
-  })
+  // const filteredDataMonth = activities.filter(activity => {
+  //   const activityDate = new Date(activity.startDateLocal.slice(0, -1))
+  //   return (activityDate.getMonth() === currentTime.getMonth()) && (activityDate.getFullYear() === currentTime.getFullYear())
+  // })
 
-  const filteredDataYear = activities.filter(activity => {
-    const activityDate = new Date(activity.startDateLocal.slice(0, -1))
-    return activityDate.getFullYear() === currentTime.getFullYear()
-  })
+  // const filteredDataYear = activities.filter(activity => {
+  //   const activityDate = new Date(activity.startDateLocal.slice(0, -1))
+  //   return activityDate.getFullYear() === currentTime.getFullYear()
+  // })
 
-  const month1 = userMilestones
-  .filter(goal => goal.forPeriod === MilestonePeriod.CURRENT_MONTH)
-  .map(goal => {
-    const count = filteredDataMonth.filter(activity => activity.distance > goal.distanceStart && activity.distance < goal.distanceEnd).length
-    return {
-      label: goal.label,
-      count
-    }
-  })
+  // const month1 = userMilestones
+  // .filter(goal => goal.forPeriod === MilestonePeriod.CURRENT_MONTH)
+  // .map(goal => {
+  //   const count = filteredDataMonth.filter(activity => activity.distance > goal.distanceStart && activity.distance < goal.distanceEnd).length
+  //   return {
+  //     label: goal.label,
+  //     count
+  //   }
+  // })
 
-  const year1 = userMilestones
-    .filter(goal => goal.forPeriod === MilestonePeriod.CURRENT_YEAR)
-    .map(goal => {
-      const count = filteredDataYear.filter(activity => activity.distance > goal.distanceStart && activity.distance < goal.distanceEnd).length
-      return {
-        label: goal.label,
-        count
-      }
-    })
+  // const year1 = userMilestones
+  //   .filter(goal => goal.forPeriod === MilestonePeriod.CURRENT_YEAR)
+  //   .map(goal => {
+  //     const count = filteredDataYear.filter(activity => activity.distance > goal.distanceStart && activity.distance < goal.distanceEnd).length
+  //     return {
+  //       label: goal.label,
+  //       count
+  //     }
+  //   })
 
-  const all1 = userMilestones
-    .filter(goal => goal.forPeriod === MilestonePeriod.ALL_TIME)
-    .map(goal => {
-      const count = activities.filter(activity => activity.distance > goal.distanceStart && activity.distance < goal.distanceEnd).length
-      return {
-        label: goal.label,
-        count
-      }
-    })
+  // const all1 = userMilestones
+  //   .filter(goal => goal.forPeriod === MilestonePeriod.ALL_TIME)
+  //   .map(goal => {
+  //     const count = activities.filter(activity => activity.distance > goal.distanceStart && activity.distance < goal.distanceEnd).length
+  //     return {
+  //       label: goal.label,
+  //       count
+  //     }
+  //   })
 
   return (
     <Tabs defaultValue={dayjs(currentTime).format('MMMM')}>

@@ -1,0 +1,22 @@
+.ActivityGridWrapper {
+  display: grid;
+  grid-template-areas:
+    'timeData calendar'
+    'customRange customRange'
+  ;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr min-content;
+  gap: var(--spacing-lg);
+}
+
+.TimeLineDataContainer {
+  grid-area: timeData;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.Calendar {
+  grid-area: calendar;
+  justify-self: center;
+}
