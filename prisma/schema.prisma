@@ -14,12 +14,12 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Athlete {
-  id String  @id @map("_id") @db.ObjectId
-  username String
-  firstname String
-  lastname String
-}
+// model Athlete {
+//   id String  @id @map("_id") @db.ObjectId
+//   username String
+//   firstname String
+//   lastname String
+// }
 
 
 model User {
@@ -30,6 +30,7 @@ model User {
   image         String?
   stravaData    StravaData?
   milestones    Milestone[]
+  createdExercies Exercise[]
 }
 
 model StravaData {
@@ -40,6 +41,25 @@ model StravaData {
   expiresAt     Int
   user          User @relation(fields: [userId], references: [id])
   userId String @unique @db.ObjectId
+}
+
+model ExerciseTemplate {
+  id     String  @id @default(auto()) @map("_id") @db.ObjectId
+  name   String
+  sets   Int
+  exercises Exercise[] @relation(fields: [exerciseIDs], references: [id])
+  exerciseIDs String[] @db.ObjectId
+}
+
+model Exercise {
+  id     String  @id @default(auto()) @map("_id") @db.ObjectId
+  name   String
+  reps   String
+  user User @relation(fields: [userId], references: [id])
+  userId String @unique @db.ObjectId
+  description String?
+  exerciseTemplates ExerciseTemplate[] @relation(fields: [exerciseTemplateIDs], references: [id])
+  exerciseTemplateIDs String[] @db.ObjectId
 }
 
 model VerificationToken {
