@@ -29,7 +29,9 @@ model User {
   image           String?
   stravaData      StravaData?
   milestones      Milestone[]
-  createdExercies Exercise[]
+  userActivities    UserActivity[]
+  userExercises   Exercise[]
+  userWorkouts    Workout[]
 }
 
 model StravaData {
@@ -40,25 +42,38 @@ model StravaData {
   expiresAt    Int
   user         User   @relation(fields: [userId], references: [id])
   userId       String @unique @db.ObjectId
+
+}
+
+model UserActivity {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  // Connects the userActivity to the user
+  user         User   @relation(fields: [userId], references: [id])
+  userId       String @db.ObjectId
+  // Join table for workout and exercise
+  workout Workout @relation(fields: [workoutId], references: [id])
+  workoutId String  @db.ObjectId
+  exercise Exercise @relation(fields: [exerciseId], references: [id])
+  exerciseId String  @db.ObjectId
 }
 
 model Workout {
   id          String     @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   sets        Int
-  exercises   Exercise[] @relation(fields: [exerciseIDs], references: [id])
-  exerciseIDs String[]   @db.ObjectId
+  UserActivities UserActivity[]
+  user         User   @relation(fields: [userId], references: [id])
+  userId       String @db.ObjectId
 }
 
 model Exercise {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   reps        String
-  user        User      @relation(fields: [userId], references: [id])
-  userId      String    @unique @db.ObjectId
   description String?
-  workouts    Workout[] @relation(fields: [workoutIDs], references: [id])
-  workoutIDs  String[]  @db.ObjectId
+  UserActivities UserActivity[]
+  user         User   @relation(fields: [userId], references: [id])
+  userId       String @db.ObjectId
 }
 
 model VerificationToken {

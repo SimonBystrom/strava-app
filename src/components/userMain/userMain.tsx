@@ -1,5 +1,5 @@
-import { FC, useEffect } from 'react'
-import { Avatar, Badge, Button, Card, CardSection, Group, Image, Loader, Text } from '@mantine/core';
+import { FC } from 'react'
+import { Avatar, Badge, Button, Card, Group, Loader, Text } from '@mantine/core';
 import { useAthleteStats } from '../../hooks/athleteStats';
 import ConnectToStrava from '../checkStravaConnection/checkStravaConnection';
 import { BaseStats } from '../../types/stravaTypes';
@@ -30,9 +30,6 @@ interface UserMainProps {
 
 const UserMain: FC<UserMainProps> = ({userId}) => {
   const {data: athleteStats, isLoading} = useAthleteStats(userId)
-
-
-
 
   if (isLoading) {
     return (

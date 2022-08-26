@@ -6,13 +6,13 @@ import { protectedExampleRouter } from "./protected-example-router";
 import { loginRouter } from "./login";
 import { stravaDataRouter } from "./stravaData";
 import { userMilestonesRouter } from "./milestones";
-import { exercisesRouter } from "./exercises";
+import { userActivityRouter } from "./exercises";
 
 export const appRouter = createRouter()
   .transformer(superjson)
   .merge("signup.", loginRouter)
   .merge("stravaData.", stravaDataRouter)
-  .merge("exercises.", exercisesRouter)
+  .merge("exercises.", userActivityRouter)
   .merge("userMilestones.", userMilestonesRouter)
 
 // export type definition of API
