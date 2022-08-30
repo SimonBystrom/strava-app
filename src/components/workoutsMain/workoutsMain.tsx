@@ -16,7 +16,7 @@ const WorkoutsMain: FC<WorkoutMainProps> = ({ userId }) => {
     <>
       <Tabs defaultValue='workouts'>
         <Tabs.List>
-          <Tabs.Tab value='activities' title='Activities'>Activities</Tabs.Tab>
+          <Tabs.Tab value='activities' title='Activities'>Logged Activities</Tabs.Tab>
           <Tabs.Tab value='workouts' title='Workouts'>Workouts</Tabs.Tab>
           <Tabs.Tab value='exercises' title='Exercises'>Exercises</Tabs.Tab>
         </Tabs.List>
