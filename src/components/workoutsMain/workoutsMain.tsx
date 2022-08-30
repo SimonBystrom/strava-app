@@ -1,5 +1,4 @@
 import { FC, useCallback, useEffect } from 'react'
-import { Avatar, Badge, Button, Card, CardSection, Group, Image, Loader, MultiSelect, NumberInput, Text, TextInput } from '@mantine/core';
 import { useAthleteStats } from '../../hooks/athleteStats';
 import ConnectToStrava from '../checkStravaConnection/checkStravaConnection';
 import { BaseStats } from '../../types/stravaTypes';
@@ -9,63 +8,9 @@ import { useForm, zodResolver } from '@mantine/form';
 import { trpc } from '../../utils/trpc';
 import { IUserActivity, userActivitySchema } from '../../server/validations/userActivity';
 import { Exercise } from '@prisma/client';
+import WorkoutsTab from './workoutsTab/workoutsTab';
+import { Loader, Tabs } from '@mantine/core';
 
-interface CreateWorkoutProps {
-  userId: string
-  exercises: Exercise[]
-}
-
-const CreateWorkout: React.FC<CreateWorkoutProps> = ({ userId, exercises }) => {
-
-  const form = useForm({
-    validate: zodResolver(userActivitySchema),
-    initialValues: {
-      name: '',
-      sets: 0,
-      userId,
-      exercises: exercises.map(exercise => ({
-        exerciseId: exercise.id
-      }))
-    }
-  })
-  const { mutateAsync } = trpc.useMutation(["exercises.createWorkout"])
-
-  const onSubmit = useCallback(
-    async (data: IUserActivity) => {
-      const results = await mutateAsync(data)
-      if (results) {
-        console.log('---->', results)
-        form.reset()
-      }
-    }, [mutateAsync, form]
-  )
-
-  return (
-    <form onSubmit={form.onSubmit((values) => onSubmit(values))}>
-      <TextInput
-        label="Workout name"
-        placeholder="ex"
-        {...form.getInputProps('name')}
-      />
-      <NumberInput
-        label="Sets"
-        placeholder="ex"
-        {...form.getInputProps('sets')}
-      />
-      <MultiSelect
-        label='Exercises'
-        placeholder='ex'
-        data={exercises.map(e => ({
-          label: e.name,
-          value: e.id
-        }))}
-      />
-      <Button variant='filled' type="submit">
-        craete
-      </Button>
-    </form>
-  )
-}
 
 
 
@@ -74,9 +19,10 @@ interface WorkoutMainProps {
 }
 
 const WorkoutsMain: FC<WorkoutMainProps> = ({ userId }) => {
-  const {data: exercises, isLoading} = trpc.useQuery(['exercises.getAllExercises', {userId: userId}])
+  const {data: exercises, isLoading: exercisesLoading} = trpc.useQuery(['exercises.getAllExercises', {userId: userId}])
+  const {data: workouts, isLoading: workoutsLoading} = trpc.useQuery(['exercises.getUserWorkouts', {userId: userId}])
 
-  if (isLoading) {
+  if (exercisesLoading || workoutsLoading) {
     return (
       <>
         <Loader></Loader>
@@ -92,8 +38,21 @@ const WorkoutsMain: FC<WorkoutMainProps> = ({ userId }) => {
 
   return (
     <>
-      <CreateExercise userId={userId}/>
-      {exercises && <CreateWorkout userId={userId} exercises={exercises}/>}
+      {/* <CreateExercise userId={userId}/>
+      {exercises && <CreateWorkout userId={userId} exercises={exercises}/>} */}
+      <Tabs defaultValue='workouts'>
+        <Tabs.List>
+          <Tabs.Tab value='activities' title='Activities'>Activities</Tabs.Tab>
+          <Tabs.Tab value='workouts' title='Workouts'>Workouts</Tabs.Tab>
+          <Tabs.Tab value='exercises' title='Exercises'>Exercises</Tabs.Tab>
+        </Tabs.List>
+
+        <Tabs.Panel value='activities'>Activities</Tabs.Panel>
+        <Tabs.Panel value='workouts'>
+          {exercises && workouts && <WorkoutsTab userId={userId} exercises={exercises} workouts={workouts}/>}
+        </Tabs.Panel>
+        <Tabs.Panel value='exercises'>Exercises</Tabs.Panel>
+      </Tabs>
     </>
   )
 }

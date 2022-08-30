@@ -23,6 +23,18 @@ export const userActivityRouter = createRouter()
       return await ctx.prisma.exercise.findMany()
     }
   })
+  .query('getUserWorkouts', {
+    input: z.object({
+      userId: z.string()
+    }),
+    resolve: async ({input: {userId}, ctx}) => {
+      return await ctx.prisma.workout.findMany({
+        where: {
+          userId: userId
+        }
+      })
+    }
+  })
   .mutation('createExercise', {
     input: exerciseSchema,
     resolve: async ({input, ctx}) => {
