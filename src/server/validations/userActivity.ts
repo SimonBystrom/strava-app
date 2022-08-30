@@ -14,9 +14,7 @@ export const workoutSchema = z.object({
 })
 
 export const userActivitySchema = workoutSchema.extend({
-  exercises: z.array(z.object({
-    exerciseId: z.string()
-  }))
+  exercises: z.array(z.string())
 })
 
 export type IExercises = z.infer<typeof exerciseSchema>

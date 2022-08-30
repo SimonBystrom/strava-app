@@ -34,7 +34,7 @@ const WorkoutsTab: React.FC<WorkoutsTabProps> = ({
     )
   }
 
-  if (!workouts) {
+  if (workouts.length === 0) {
     return (
       <>
         <p>No Workouts made yet...</p>
@@ -52,12 +52,19 @@ const WorkoutsTab: React.FC<WorkoutsTabProps> = ({
       </>
     )
   }
+  console.log('--->', workouts)
 
   const rows = workouts.map((workout, idx) => (
     <tr key={`${idx}-${workout.name}`}>
       <td>{workout.name}</td>
       <td>{workout.sets}</td>
-      <td>Exercises ... (todo)</td>
+      <td>{workout.exercises.map((exercise, idx) => {
+        return (
+          <span key={`${idx}-${exercise.name}`}>
+            {`${exercise.name}${idx !== (workout.exercises.length - 1) ? ', ' : ''}`}
+          </span>
+        )
+      })}</td>
       <td>
         <Button>Edit</Button>
         <Button>Delete</Button>

@@ -1,3 +1,4 @@
+import { Exercise, User, Workout } from "@prisma/client"
 import { z } from "zod"
 import { exerciseSchema, userActivitySchema, workoutSchema } from "../validations/userActivity"
 import { createRouter } from "./context"
@@ -35,14 +36,51 @@ export const userActivityRouter = createRouter()
       userId: z.string()
     }),
     resolve: async ({input: {userId}, ctx}) => {
-      return await ctx.prisma.workout.findMany({
+      // return await ctx.prisma.workout.findMany({
+      //   where: {
+      //     userId: userId
+      //   },
+      //   orderBy: {
+      //     createdAt: 'desc'
+      //   },
+      // })
+      const userActivities = await ctx.prisma.userActivity.findMany({
         where: {
           userId: userId
         },
         orderBy: {
           createdAt: 'desc'
         },
+        include: {
+          exercise: true,
+          workout: true,
+          user: true,
+        }
       })
+      let results: {
+        id: string,
+        name: string,
+        sets: number,
+        user: User,
+        userId: string,
+        exercises: Exercise[]
+      }[] = []
+      userActivities.forEach(activity => {
+        const existingWorkout = results.find(elem => elem.id === activity.workoutId)
+        if (existingWorkout) {
+          existingWorkout.exercises.push(activity.exercise)
+        } else {
+          results.push({
+            id: activity.workoutId,
+            name: activity.workout.name,
+            sets: activity.workout.sets,
+            user: activity.user,
+            userId: activity.userId,
+            exercises: [activity.exercise],
+          })
+        }
+      })
+      return results
     }
   })
   .mutation('createExercise', {
@@ -97,7 +135,7 @@ export const userActivityRouter = createRouter()
             },
             exercise: {
               connect: {
-                id: exerciseData.exerciseId
+                id: exerciseData
               }
             }
           }

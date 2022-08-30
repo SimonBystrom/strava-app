@@ -20,15 +20,17 @@ const CreateWorkout: FC<CreateWorkoutProps> = ({ userId, exercises, onCreateSucc
       name: '',
       sets: 0,
       userId,
-      exercises: exercises.map(exercise => ({
-        exerciseId: exercise.id
-      }))
+      // exercises: exercises.map(exercise => ({
+      //   exerciseId: exercise.id
+      // }))
+      exercises: []
     }
   })
 
-
+  console.log('Current form values', form.values)
   const onSubmit = useCallback(
     async (data: IUserActivity) => {
+      console.log('starting onSubmit')
       const results = await createWorkout(data)
       if(error) {
         console.info('Some error occured... ', error)
@@ -56,10 +58,13 @@ const CreateWorkout: FC<CreateWorkoutProps> = ({ userId, exercises, onCreateSucc
       <MultiSelect
         label='Exercises'
         placeholder='ex'
+        searchable
+        clearable
         data={exercises.map(e => ({
           label: e.name,
           value: e.id
         }))}
+        {...form.getInputProps('exercises')}
       />
       <Button variant='filled' type="submit">
         craete
