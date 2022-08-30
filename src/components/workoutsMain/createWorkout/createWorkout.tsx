@@ -4,14 +4,16 @@ import { useForm, zodResolver } from '@mantine/form';
 import { Exercise } from '@prisma/client';
 import { IUserActivity, userActivitySchema } from '../../../server/validations/userActivity';
 import { trpc } from '../../../utils/trpc';
+import { useCreateWorkout } from '../../../hooks/workouts';
 
 interface CreateWorkoutProps {
   userId: string
   exercises: Exercise[]
+  onCreateSuccess: () => void
 }
 
-const CreateWorkout: FC<CreateWorkoutProps> = ({ userId, exercises }) => {
-
+const CreateWorkout: FC<CreateWorkoutProps> = ({ userId, exercises, onCreateSuccess }) => {
+  const {mutateAsync: createWorkout, error} = useCreateWorkout()
   const form = useForm({
     validate: zodResolver(userActivitySchema),
     initialValues: {
@@ -23,16 +25,20 @@ const CreateWorkout: FC<CreateWorkoutProps> = ({ userId, exercises }) => {
       }))
     }
   })
-  const { mutateAsync } = trpc.useMutation(["exercises.createWorkout"])
+
 
   const onSubmit = useCallback(
     async (data: IUserActivity) => {
-      const results = await mutateAsync(data)
+      const results = await createWorkout(data)
+      if(error) {
+        console.info('Some error occured... ', error)
+      }
       if (results) {
         console.log('---->', results)
         form.reset()
+        onCreateSuccess()
       }
-    }, [mutateAsync, form]
+    }, [createWorkout, form, error, onCreateSuccess]
   )
 
   return (

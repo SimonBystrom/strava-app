@@ -1,23 +1,20 @@
 import { Button, Drawer, Loader, Table } from "@mantine/core"
-import { Exercise, Workout } from "@prisma/client"
 import { useState } from "react"
-import { trpc } from "../../../utils/trpc"
+import { useAllExercises } from "../../../hooks/exercises"
+import { useUserWorkouts } from "../../../hooks/workouts"
 import CreateWorkout from "../createWorkout/createWorkout"
 
 interface WorkoutsTabProps {
-  // workouts: Workout[]
-  // exercises: Exercise[]
   userId: string
 }
 
 
 const WorkoutsTab: React.FC<WorkoutsTabProps> = ({
-  // workouts,
-  // exercises,
   userId,
  }) => {
-  const { data: exercises, isLoading: exercisesLoading } = trpc.useQuery(['exercises.getAllExercises', { userId: userId }])
-  const { data: workouts, isLoading: workoutsLoading } = trpc.useQuery(['exercises.getUserWorkouts', { userId: userId }])
+
+  const {workouts, isLoading: workoutsLoading} = useUserWorkouts(userId)
+  const { exercises, isLoading: exercisesLoading } = useAllExercises(userId)
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false)
 
   if (exercisesLoading || workoutsLoading) {
@@ -49,7 +46,7 @@ const WorkoutsTab: React.FC<WorkoutsTabProps> = ({
           size='xl'
           position='right'
         >
-          <CreateWorkout userId={userId} exercises={exercises} />
+          <CreateWorkout userId={userId} exercises={exercises} onCreateSuccess={() => setDrawerOpen(false)}/>
         </Drawer>
         <Button onClick={() => setDrawerOpen(true)}>New Workout</Button>
       </>
@@ -78,7 +75,7 @@ const WorkoutsTab: React.FC<WorkoutsTabProps> = ({
         size='xl'
         position='right'
       >
-        <CreateWorkout userId={userId} exercises={exercises}/>
+        <CreateWorkout userId={userId} exercises={exercises} onCreateSuccess={() => setDrawerOpen(false)}/>
       </Drawer>
       <Button onClick={() => setDrawerOpen(true)}>New Workout</Button>
       <Table>

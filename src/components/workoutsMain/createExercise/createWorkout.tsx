@@ -1,13 +1,16 @@
 import { Button, TextInput } from "@mantine/core"
 import { useForm, zodResolver } from "@mantine/form"
 import { useCallback } from "react"
+import { useCreateExercise } from "../../../hooks/exercises"
 import { exerciseSchema, IExercises } from "../../../server/validations/userActivity"
-import { trpc } from "../../../utils/trpc"
 
 interface CreateExerciseProps {
   userId: string
+  onCreateSuccess: () => void
 }
-const CreateExercise: React.FC<CreateExerciseProps> = ({ userId }) => {
+const CreateExercise: React.FC<CreateExerciseProps> = ({ userId, onCreateSuccess }) => {
+  const{mutateAsync: createExercise, error} = useCreateExercise()
+
   const form = useForm({
     validate: zodResolver(exerciseSchema),
     initialValues: {
@@ -17,15 +20,18 @@ const CreateExercise: React.FC<CreateExerciseProps> = ({ userId }) => {
       description: '',
     }
   })
-  const { mutateAsync } = trpc.useMutation(["exercises.createExercise"])
 
   const onSubmit = useCallback(
     async (data: IExercises) => {
-      const results = await mutateAsync(data)
+      const results = await createExercise(data)
+      if (error) {
+        console.info('Some error occured... ', error)
+      }
       if (results) {
         form.reset()
+        onCreateSuccess()
       }
-    }, [mutateAsync, form]
+    }, [createExercise, form, error, onCreateSuccess]
   )
 
   return (

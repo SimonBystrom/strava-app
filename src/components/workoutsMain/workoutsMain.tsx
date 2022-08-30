@@ -1,15 +1,7 @@
-import { FC, useCallback, useEffect } from 'react'
-import { useAthleteStats } from '../../hooks/athleteStats';
-import ConnectToStrava from '../checkStravaConnection/checkStravaConnection';
-import { BaseStats } from '../../types/stravaTypes';
+import { FC } from 'react'
 import classes from './workoutsMain.module.scss'
-import CreateExercise from './createExercise/createWorkout';
-import { useForm, zodResolver } from '@mantine/form';
-import { trpc } from '../../utils/trpc';
-import { IUserActivity, userActivitySchema } from '../../server/validations/userActivity';
-import { Exercise } from '@prisma/client';
 import WorkoutsTab from './workoutsTab/workoutsTab';
-import { Loader, Tabs } from '@mantine/core';
+import {  Tabs } from '@mantine/core';
 import ExercisesTab from './exercisesTab/exercisesTab';
 
 
@@ -20,27 +12,8 @@ interface WorkoutMainProps {
 }
 
 const WorkoutsMain: FC<WorkoutMainProps> = ({ userId }) => {
-  // const {data: exercises, isLoading: exercisesLoading} = trpc.useQuery(['exercises.getAllExercises', {userId: userId}])
-  // const {data: workouts, isLoading: workoutsLoading} = trpc.useQuery(['exercises.getUserWorkouts', {userId: userId}])
-
-  // if (exercisesLoading || workoutsLoading) {
-  //   return (
-  //     <>
-  //       <Loader></Loader>
-  //       <p>User Main loader</p>
-  //     </>
-  //   )
-  // }
-
-  // TODO: Display all users Workouts
-  // Have modals on Create exercise and create workout
-  // Display created exercises somewhere for edit aswell
-  // add edit to workouts as well
-
   return (
     <>
-      {/* <CreateExercise userId={userId}/>
-      {exercises && <CreateWorkout userId={userId} exercises={exercises}/>} */}
       <Tabs defaultValue='workouts'>
         <Tabs.List>
           <Tabs.Tab value='activities' title='Activities'>Activities</Tabs.Tab>
