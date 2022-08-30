@@ -64,6 +64,8 @@ model Workout {
   UserActivities UserActivity[]
   user         User   @relation(fields: [userId], references: [id])
   userId       String @db.ObjectId
+  createdAt    DateTime @default(now())
+  updatedAt   DateTime? @updatedAt
 }
 
 model Exercise {
@@ -74,6 +76,8 @@ model Exercise {
   UserActivities UserActivity[]
   user         User   @relation(fields: [userId], references: [id])
   userId       String @db.ObjectId
+  createdAt    DateTime @default(now())
+  updatedAt   DateTime? @updatedAt
 }
 
 model VerificationToken {

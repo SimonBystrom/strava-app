@@ -11,7 +11,10 @@ export const userActivityRouter = createRouter()
       return await ctx.prisma.exercise.findMany({
         where: {
           userId: userId
-        }
+        },
+        orderBy: {
+          createdAt: 'desc'
+        },
       })
     }
   })
@@ -20,7 +23,11 @@ export const userActivityRouter = createRouter()
       userId: z.string()
     }),
     resolve: async ({input: {userId}, ctx}) => {
-      return await ctx.prisma.exercise.findMany()
+      return await ctx.prisma.exercise.findMany({
+        orderBy: {
+          createdAt: 'desc',
+        },
+      })
     }
   })
   .query('getUserWorkouts', {
@@ -31,7 +38,10 @@ export const userActivityRouter = createRouter()
       return await ctx.prisma.workout.findMany({
         where: {
           userId: userId
-        }
+        },
+        orderBy: {
+          createdAt: 'desc'
+        },
       })
     }
   })

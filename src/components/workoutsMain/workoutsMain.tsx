@@ -10,6 +10,7 @@ import { IUserActivity, userActivitySchema } from '../../server/validations/user
 import { Exercise } from '@prisma/client';
 import WorkoutsTab from './workoutsTab/workoutsTab';
 import { Loader, Tabs } from '@mantine/core';
+import ExercisesTab from './exercisesTab/exercisesTab';
 
 
 
@@ -19,17 +20,17 @@ interface WorkoutMainProps {
 }
 
 const WorkoutsMain: FC<WorkoutMainProps> = ({ userId }) => {
-  const {data: exercises, isLoading: exercisesLoading} = trpc.useQuery(['exercises.getAllExercises', {userId: userId}])
-  const {data: workouts, isLoading: workoutsLoading} = trpc.useQuery(['exercises.getUserWorkouts', {userId: userId}])
+  // const {data: exercises, isLoading: exercisesLoading} = trpc.useQuery(['exercises.getAllExercises', {userId: userId}])
+  // const {data: workouts, isLoading: workoutsLoading} = trpc.useQuery(['exercises.getUserWorkouts', {userId: userId}])
 
-  if (exercisesLoading || workoutsLoading) {
-    return (
-      <>
-        <Loader></Loader>
-        <p>User Main loader</p>
-      </>
-    )
-  }
+  // if (exercisesLoading || workoutsLoading) {
+  //   return (
+  //     <>
+  //       <Loader></Loader>
+  //       <p>User Main loader</p>
+  //     </>
+  //   )
+  // }
 
   // TODO: Display all users Workouts
   // Have modals on Create exercise and create workout
@@ -49,9 +50,11 @@ const WorkoutsMain: FC<WorkoutMainProps> = ({ userId }) => {
 
         <Tabs.Panel value='activities'>Activities</Tabs.Panel>
         <Tabs.Panel value='workouts'>
-          {exercises && workouts && <WorkoutsTab userId={userId} exercises={exercises} workouts={workouts}/>}
+          <WorkoutsTab userId={userId}/>
         </Tabs.Panel>
-        <Tabs.Panel value='exercises'>Exercises</Tabs.Panel>
+        <Tabs.Panel value='exercises'>
+          <ExercisesTab userId={userId}/>
+        </Tabs.Panel>
       </Tabs>
     </>
   )
