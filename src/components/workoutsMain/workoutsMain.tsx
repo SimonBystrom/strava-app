@@ -3,6 +3,7 @@ import classes from './workoutsMain.module.scss'
 import WorkoutsTab from './workoutsTab/workoutsTab';
 import {  Tabs } from '@mantine/core';
 import ExercisesTab from './exercisesTab/exercisesTab';
+import LoggedActivity from './loggedActivityTab/loggedActivityTab';
 
 
 
@@ -21,7 +22,9 @@ const WorkoutsMain: FC<WorkoutMainProps> = ({ userId }) => {
           <Tabs.Tab value='exercises' title='Exercises'>Exercises</Tabs.Tab>
         </Tabs.List>
 
-        <Tabs.Panel value='activities'>Activities</Tabs.Panel>
+        <Tabs.Panel value='activities'>
+          <LoggedActivity userId={userId} />
+        </Tabs.Panel>
         <Tabs.Panel value='workouts'>
           <WorkoutsTab userId={userId}/>
         </Tabs.Panel>

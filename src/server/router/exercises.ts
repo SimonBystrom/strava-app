@@ -1,6 +1,6 @@
 import { Exercise, User, Workout } from "@prisma/client"
 import { z } from "zod"
-import { exerciseSchema, userActivitySchema, workoutSchema } from "../validations/userActivity"
+import { exerciseSchema, loggedActivitySchema, userActivitySchema, workoutSchema } from "../validations/userActivity"
 import { createRouter } from "./context"
 
 export const userActivityRouter = createRouter()
@@ -161,5 +161,47 @@ export const userActivityRouter = createRouter()
       *   exercises: [exercise{}, exercise{}]
       * }
       * */
+    }
+  })
+  .mutation('createLoggedActivity', {
+    input: loggedActivitySchema,
+    resolve: async ({input, ctx}) => {
+      const { userId, workoutId, date } = input
+
+      const loggedActivity = await ctx.prisma.loggedActivity.create({
+        data: {
+          date,
+          user: {
+            connect: {
+              id: userId,
+            }
+          },
+          workout: {
+            connect: {
+              id: workoutId,
+            }
+          }
+        }
+      })
+      return loggedActivity
+    }
+  })
+  .query('getUserLoggedActivities', {
+    input: z.object({
+      userId: z.string()
+    }),
+    resolve: async ({input: {userId}, ctx}) => {
+      const loggedActivities = await ctx.prisma.loggedActivity.findMany({
+        where: {
+          userId: userId
+        },
+        orderBy: {
+          createdAt: 'desc'
+        },
+        include: {
+          workout: true
+        }
+      })
+      return loggedActivities
     }
   })
