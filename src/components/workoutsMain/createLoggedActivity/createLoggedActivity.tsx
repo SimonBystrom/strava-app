@@ -44,7 +44,7 @@ const CreateLoggedActivity: FC<CreateLoggedActivityProps> = ({ userId, workouts,
   return (
     <form onSubmit={form.onSubmit((values) => onSubmit(values))}>
       <Select
-        label='Exercises'
+        label='Workout'
         placeholder='ex'
         searchable
         clearable
@@ -55,12 +55,13 @@ const CreateLoggedActivity: FC<CreateLoggedActivityProps> = ({ userId, workouts,
         {...form.getInputProps('workoutId')}
       />
       <DatePicker
+        label='Workout Date'
         value={pickedDate}
         onChange={e => setPickedDate(e || new Date())}
         {...form.getInputProps('date')}
       />
       <Button variant='filled' type="submit">
-        craete
+        Log Workout
       </Button>
     </form>
   )

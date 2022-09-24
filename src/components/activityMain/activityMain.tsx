@@ -3,15 +3,17 @@ import { FC } from 'react'
 import { useAthleteActivities } from '../../hooks/athleteActivities'
 import Activities from './activities/activites'
 import ConnectToStrava from '../checkStravaConnection/checkStravaConnection'
+import { useUserLoggedActivities } from '../../hooks/loggedActivity'
 
 interface ActivityMainProps {
   userId: string
 }
 
 const ActivityMain: FC<ActivityMainProps> = ({userId}) => {
-  const { isLoading, data: athleteActivities } = useAthleteActivities(userId)
+  const { isLoading: athleteActivitiesLoading, data: athleteActivities } = useAthleteActivities(userId)
+  const { loggedActivities, isLoading: loggedActivitiesLoading } = useUserLoggedActivities(userId)
 
-  if (isLoading) {
+  if (athleteActivitiesLoading || loggedActivitiesLoading) {
     return (
       <>
         <Loader size="xl" />
@@ -23,7 +25,11 @@ const ActivityMain: FC<ActivityMainProps> = ({userId}) => {
     return <ConnectToStrava userId={userId}/>
   }
   return (
-    <Activities activities={athleteActivities.res} userId={userId}/>
+    <Activities
+      loggedWorkouts={loggedActivities}
+      stravaActivities={athleteActivities.res}
+      userId={userId}
+    />
   )
 }
 

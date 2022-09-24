@@ -52,7 +52,6 @@ const LoggedActivity: React.FC<LoggedActivityProps> = ({
       </>
     )
   }
-  console.log('--->', workouts)
 
   const rows = loggedActivities.map((activity, idx) => (
     <tr key={`${idx}-${activity.workout.name}`}>
@@ -71,12 +70,12 @@ const LoggedActivity: React.FC<LoggedActivityProps> = ({
       <Drawer
         opened={drawerOpen}
         onClose={() => setDrawerOpen(false)}
-        title='Create Workout'
+        title='Log Workout'
         padding='xl'
         size='xl'
         position='right'
       >
-        {/* <CreateWorkout userId={userId} exercises={exercises} onCreateSuccess={() => setDrawerOpen(false)} /> */}
+        <CreateLoggedActivity userId={userId} workouts={parsedWorkouts} onCreateSuccess={() => setDrawerOpen(false)} />
       </Drawer>
       <Button onClick={() => setDrawerOpen(true)}>New Workout</Button>
       <Table>
