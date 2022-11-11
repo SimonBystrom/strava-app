@@ -24,10 +24,10 @@ const TimeLine: FC<TimeLineProps> = ({activities, customPeriod, setCustomPeriod}
     <div className={classes.ActivityGridWrapper}>
       <div className={classes.TimeLineDataContainer}>
         <TimePeriodData label={dayjs(currentTime).format('MMMM')} period={month} />
-        <TimePeriodData label={dayjs(currentTime).format('YYYY')} period={year} />
-        <TimePeriodData label='All Time' period={all} />
+        {/* <TimePeriodData label={dayjs(currentTime).format('YYYY')} period={year} /> */}
+        {/* <TimePeriodData label='All Time' period={all} /> */}
       </div>
-      <div className={classes.Calendar}>
+      {/* <div className={classes.Calendar}>
         <Calendar
           onChange={() => { }}
           dayStyle={(date) => {
@@ -48,13 +48,13 @@ const TimeLine: FC<TimeLineProps> = ({activities, customPeriod, setCustomPeriod}
             return {}
           }}
         />
-      </div>
-      <CustomTimeRangeData
+      </div> */}
+      {/* <CustomTimeRangeData
         label='Custom Range'
         period={custom}
         customPeriod={customPeriod}
         setCustomPeriod={setCustomPeriod}
-      />
+      /> */}
     </div>
   )
 }

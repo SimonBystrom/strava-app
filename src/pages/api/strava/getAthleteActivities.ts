@@ -33,6 +33,8 @@ type AuthResponse = {
  */
 export const getUserActivities = async (
   dbTokens: StravaData,
+  beforeDate?: Date,
+  afterDate?: Date,
 ) => {
 
   const clientId = process.env.NEXT_PUBLIC_STRAVA_CLIENT_ID
@@ -69,11 +71,14 @@ export const getUserActivities = async (
         athleteId: dbTokens.athleteId
       }
     }
+
+    const beforeDateEpochStamp = beforeDate ? Math.floor(beforeDate.getTime() / 1000) : undefined
+    const afterDateEpochStamp = afterDate ? Math.floor(afterDate.getTime() / 1000) : undefined
     // Loop over all pages to get all activities.
     while (!allResultsFetched) {
       try {
         activityRes = await axios.get(
-          `https://www.strava.com/api/v3/athlete/activities?per_page=50&page=${page}`,
+          `https://www.strava.com/api/v3/athlete/activities?per_page=50&page=${page}${beforeDate && `&before=${beforeDateEpochStamp}`}${afterDate && `&after=${afterDateEpochStamp}`}`,
           { headers: { Authorization: `Bearer ${tokens.accessToken}` } }
         )
       } catch (error) {
@@ -96,6 +101,7 @@ export const getUserActivities = async (
     }
     return {
       res: activities,
+      runs: activities.filter(activity => activity.type === 'Run'),
       expired,
       tokens,
     }
